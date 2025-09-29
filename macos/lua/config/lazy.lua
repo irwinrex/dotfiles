@@ -51,3 +51,4 @@ require("lazy").setup({
     },
   },
 })
+vim.g.netrw_list_hidden = 1
