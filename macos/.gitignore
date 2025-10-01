@@ -1,11 +1,8 @@
-# Ignore downloaded plugins folder
-lazy/
-
-# Ignore swap and undo files
-swap/
-undo/
-
-# Optional: ignore other temp files
-*.swp
-*.swo
-
+tt.*
+.tests
+doc/tags
+debug
+.repro
+foo.*
+*.log
+data
