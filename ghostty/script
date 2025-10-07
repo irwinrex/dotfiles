@@ -1,0 +1,32 @@
+
+# Ghostty Configuration – Working Example  
+# Path: ~/Library/Application Support/com.mitchellh.ghostty/config  
+
+# Theme for visibility: exact built-in theme name from `ghostty +list-themes`  
+theme = Catppuccin Mocha  
+
+# Font settings  
+font-family = JetBrains Mono  
+font-size = 12  
+font-feature = -liga  
+
+# Line height adjustment  
+adjust-cell-height = 4  
+
+# Window padding for usability  
+window-padding-x = 6 
+window-padding-y = 6  
+
+# Performance: scrollback buffer limit  
+scrollback-limit = 100000  
+
+# Shell integration  
+shell-integration = detect  
+shell-integration-features = cursor,sudo,title   
+
+# Disable animations for instant feedback  
+resize-overlay-duration = 0s  
+
+# macOS font clarity  
+font-thicken = true  
+font-thicken-strength = 40  
