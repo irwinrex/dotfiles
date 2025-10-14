@@ -12,5 +12,7 @@ vim.opt.number = true
 vim.opt.relativenumber = true
 vim.opt.cursorline = true
 
--- Copyright (c) 2025 Author. All Rights Reserved.
-vim.api.nvim_set_keymap("i", "jj", "<Esc>", { noremap = false })
+-- Insert mode
+vim.keymap.set("i", "<C-s>", "<C-w>", { noremap = true, silent = true })
+-- Normal mode (optional)
+vim.keymap.set("n", "<C-s>", "db", { noremap = true, silent = true })
