@@ -25,6 +25,12 @@ require("lazy").setup({
     -- Load LazyVim and its default plugins
     { "LazyVim/LazyVim", import = "lazyvim.plugins" },
 
+    -- Load language extras for Go, Python, Terraform, and Docker
+    { import = "lazyvim.plugins.extras.lang.go" },
+    { import = "lazyvim.plugins.extras.lang.python" },
+    { import = "lazyvim.plugins.extras.lang.terraform" },
+    { import = "lazyvim.plugins.extras.lang.docker" },
+
     -- Load your custom plugins from lua/plugins/
     { import = "plugins" },
   },
