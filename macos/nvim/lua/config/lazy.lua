@@ -1,6 +1,4 @@
---========================
--- Lazy.nvim Bootstrap
---========================
+-- Bootstrap lazy.nvim
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
   local lazyrepo = "https://github.com/folke/lazy.nvim.git"
@@ -17,38 +15,37 @@ if not (vim.uv or vim.loop).fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
---========================
--- Lazy Setup
---========================
+-- Configure lazy.nvim
 require("lazy").setup({
+  -- Plugin specification
   spec = {
-    -- Load LazyVim and its default plugins
+    -- 1. LazyVim's core plugins
     { "LazyVim/LazyVim", import = "lazyvim.plugins" },
 
-    -- Load language extras for Go, Python, Terraform, and Docker
-    { import = "lazyvim.plugins.extras.lang.go" },
-    { import = "lazyvim.plugins.extras.lang.python" },
-    { import = "lazyvim.plugins.extras.lang.terraform" },
-    { import = "lazyvim.plugins.extras.lang.docker" },
-
-    -- Load your custom plugins from lua/plugins/
+    -- 2. Your custom configurations (must be loaded last)
+    { import = "plugins.extras.lang" },
     { import = "plugins" },
   },
 
+  -- Default plugin options
   defaults = {
-    lazy = false, -- Load custom plugins at startup
-    version = false, -- Always use latest commit (not tagged version)
+    lazy = false, -- Load custom plugins eagerly
+    version = false, -- Use latest commit, not tagged releases
   },
 
-  install = { colorscheme = { "catppuccin", "tokyonight", "habamax" } },
+  -- Automatically install a colorscheme on startup
+  install = { colorscheme = { "catppuccin", "habamax" } },
 
+  -- Plugin update checker settings
   checker = {
-    enabled = true, -- auto-check plugin updates
-    notify = false, -- don't show popup notifications
+    enabled = true,
+    notify = false, -- Don't show notifications for updates
   },
 
+  -- Performance optimizations
   performance = {
     rtp = {
+      -- Disable unneeded built-in plugins
       disabled_plugins = {
         "gzip",
         "tarPlugin",
