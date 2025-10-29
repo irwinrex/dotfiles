@@ -1,25 +1,20 @@
 theme = Catppuccin Mocha
-
 font-family = JetBrains Mono
 font-size = 14
 font-feature = -liga
 adjust-cell-height = 6
-
 window-padding-x = 6
 window-padding-y = 6
-
 scrollback-limit = 100000
 resize-overlay-duration = 0s
-
 shell-integration = detect
 shell-integration-features = cursor,sudo,title
-
 font-thicken = true
 font-thicken-strength = 40
-
 # Transparency settings
-background-opacity = 0.85
+background-opacity = 0.90
 background-blur-radius = 20
-
+# Cursor animation
+custom-shader = ~/.config/ghostty/shader/cursor_smear.glsl
 # Optionally title bar style on macOS
 # macos-titlebar-style = "hidden"
