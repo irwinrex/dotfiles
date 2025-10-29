@@ -92,7 +92,7 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord)
 
     vec4 newColor = vec4(fragColor);
 
-    // 🟣 Catppuccin Mocha Lavender (#b4befe)
+    //  Catppuccin Mocha Peach
     vec4 trail = vec4(0.980, 0.702, 0.529, 1.0);
     trail = saturate(trail, 1.2);
 
