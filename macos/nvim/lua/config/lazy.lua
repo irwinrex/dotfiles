@@ -14,7 +14,6 @@ if not (vim.uv or vim.loop).fs_stat(lazypath) then
   end
 end
 vim.opt.rtp:prepend(lazypath)
-
 -- Configure lazy.nvim
 require("lazy").setup({
   -- Plugin specification
@@ -23,7 +22,7 @@ require("lazy").setup({
     { "LazyVim/LazyVim", import = "lazyvim.plugins" },
 
     -- 2. Your custom configurations (must be loaded last)
-    { import = "plugins.extras.lang" },
+    { import = "plugins.language" },
     { import = "plugins" },
   },
 
