@@ -9,6 +9,6 @@ This shader adds a smooth trailing smear effect to the cursor in **Ghostty Termi
 Copy the shader file to your Ghostty shaders directory:
 
 ```bash
-cp cursor_smear.glsl ~/.ghostty/shaders/cursor_smear.glsl
+cp cursor_smear.glsl ~/.config/ghostty/shaders/cursor_smear.glsl
 
 
