@@ -22,7 +22,6 @@ require("lazy").setup({
     { "LazyVim/LazyVim", import = "lazyvim.plugins" },
 
     -- 2. Your custom configurations (must be loaded last)
-    { import = "lsp" },
     { import = "plugins" },
   },
 
