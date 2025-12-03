@@ -1,73 +1,71 @@
--- plugins/language/terraform.lua
+-- plugins/lsp/terraform.lua
+local util = require("lspconfig.util")
+
+local capabilities = vim.lsp.protocol.make_client_capabilities()
+capabilities.textDocument.completion.completionItem.snippetSupport = true
 
 return {
-  ---------------------------------------------------------------------------
-  -- Mason registry (ensure Terraform tools exist)
-  ---------------------------------------------------------------------------
   {
-    "mason-org/mason-lspconfig.nvim",
+    "nvim-treesitter/nvim-treesitter",
+    opts = function(_, opts)
+      if type(opts.ensure_installed) == "table" then
+        vim.list_extend(opts.ensure_installed, { "terraform", "hcl" })
+      end
+    end,
+  },
+
+  {
+    "neovim/nvim-lspconfig",
     opts = {
-      ensure_installed = {
-        "terraformls",
-        "tflint",
+      servers = {
+        terraformls = {
+          capabilities = capabilities,
+          root_dir = util.root_pattern(".terraform", ".git", "main.tf", "terragrunt.hcl"),
+          settings = {
+            terraform = {
+              ignoreSingleFileWarning = true,
+            },
+          },
+        },
       },
     },
   },
 
-  ---------------------------------------------------------------------------
-  -- Formatting via conform.nvim (terraform fmt)
-  ---------------------------------------------------------------------------
+  {
+    "mason-org/mason-lspconfig.nvim",
+    opts = {
+      ensure_installed = { "terraformls" },
+    },
+  },
+
+  {
+    "mason-org/mason.nvim",
+    opts = function(_, opts)
+      opts.ensure_installed = opts.ensure_installed or {}
+      vim.list_extend(opts.ensure_installed, { "tflint" })
+    end,
+  },
+
   {
     "stevearc/conform.nvim",
-    ft = { "terraform", "tf", "hcl", "terraform-vars" },
+    optional = true,
     opts = {
       formatters_by_ft = {
         terraform = { "terraform_fmt" },
         tf = { "terraform_fmt" },
-        hcl = { "packer_fmt" }, -- packer .hcl
         ["terraform-vars"] = { "terraform_fmt" },
       },
-      -- No format_on_save here — LazyVim controls it globally
     },
   },
 
-  ---------------------------------------------------------------------------
-  -- Linting: terraform_validate (schema + HCL sanity)
-  ---------------------------------------------------------------------------
   {
     "mfussenegger/nvim-lint",
-    event = { "BufReadPre", "BufNewFile" },
-    ft = { "terraform", "tf", "hcl" },
+    optional = true,
     opts = {
       linters_by_ft = {
-        terraform = { "terraform_validate" },
-        tf = { "terraform_validate" },
-        hcl = { "terraform_validate" },
+        terraform = { "tflint" },
+        tf = { "tflint" },
       },
     },
-  },
-
-  ---------------------------------------------------------------------------
-  -- Telescope integration: Terraform documentation browser
-  ---------------------------------------------------------------------------
-  {
-    "ANGkeith/telescope-terraform-doc.nvim",
-    ft = { "terraform", "hcl", "tf" },
-    dependencies = { "nvim-telescope/telescope.nvim" },
-    config = function()
-      require("telescope").load_extension("terraform_doc")
-    end,
-  },
-
-  ---------------------------------------------------------------------------
-  -- Telescope integration: Terraform file / state browser
-  ---------------------------------------------------------------------------
-  {
-    "cappyzawa/telescope-terraform.nvim",
-    ft = { "terraform", "hcl", "tf" },
-    dependencies = { "nvim-telescope/telescope.nvim" },
-    config = function()
-      require("telescope").load_extension("terraform")
-    end,
   },
 }

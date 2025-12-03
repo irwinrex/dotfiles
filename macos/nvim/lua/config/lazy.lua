@@ -23,6 +23,7 @@ require("lazy").setup({
 
     -- 2. Your custom configurations (must be loaded last)
     { import = "plugins" },
+    { import = "plugins.lsp" },
   },
 
   -- Default plugin options
