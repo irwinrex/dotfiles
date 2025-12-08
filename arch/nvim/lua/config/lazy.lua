@@ -1,4 +1,14 @@
--- Bootstrap lazy.nvim
+-- Enable true colors
+vim.o.termguicolors = true
+
+-- Detect terminal background if set
+if vim.env.TERM_BACKGROUND == "light" then
+  vim.o.background = "light"
+else
+  vim.o.background = "dark"
+end
+
+-- Bootstrap lazy.nvim (your existing code)
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
   local lazyrepo = "https://github.com/folke/lazy.nvim.git"
@@ -14,44 +24,30 @@ if not (vim.uv or vim.loop).fs_stat(lazypath) then
   end
 end
 vim.opt.rtp:prepend(lazypath)
+
 -- Configure lazy.nvim
 require("lazy").setup({
-  -- Plugin specification
   spec = {
-    -- 1. LazyVim's core plugins
     { "LazyVim/LazyVim", import = "lazyvim.plugins" },
-
-    -- 2. Your custom configurations (must be loaded last)
     { import = "plugins" },
     { import = "plugins.lsp" },
   },
 
-  -- Default plugin options
   defaults = {
-    lazy = false, -- Load custom plugins eagerly
-    version = false, -- Use latest commit, not tagged releases
+    lazy = false,
+    version = false,
   },
 
-  -- Automatically install a colorscheme on startup
-  install = { colorscheme = { "catppuccin", "habamax" } },
-
-  -- Plugin update checker settings
-  checker = {
-    enabled = true,
-    notify = false, -- Don't show notifications for updates
+  -- Pick a colorscheme depending on terminal background
+  install = {
+    colorscheme = (vim.o.background == "light") and { "habamax" } or { "catppuccin" }
   },
 
-  -- Performance optimizations
+  checker = { enabled = true, notify = false },
+
   performance = {
     rtp = {
-      -- Disable unneeded built-in plugins
-      disabled_plugins = {
-        "gzip",
-        "tarPlugin",
-        "tohtml",
-        "tutor",
-        "zipPlugin",
-      },
+      disabled_plugins = { "gzip", "tarPlugin", "tohtml", "tutor", "zipPlugin" },
     },
   },
 })
