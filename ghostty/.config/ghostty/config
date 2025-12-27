@@ -1,8 +1,8 @@
 theme = Catppuccin Mocha
 font-family = JetBrains Mono
-font-size = 14
+font-size = 12
 font-feature = -liga
-adjust-cell-height = 6
+adjust-cell-height = 5
 window-padding-x = 6
 window-padding-y = 6
 scrollback-limit = 100000
