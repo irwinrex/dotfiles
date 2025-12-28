@@ -6,3 +6,16 @@
 --
 -- Or remove existing autocmds by their group name (which is prefixed with `lazyvim_` for the defaults)
 -- e.g. vim.api.nvim_del_augroup_by_name("lazyvim_wrap_spell")
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "markdown",
+  callback = function()
+    -- Disable autoformat on save
+    vim.b.autoformat = false
+
+    -- Disable automatic URL angle brackets
+    vim.opt_local.formatoptions:remove({ "a", "t" })
+
+    -- Disable LSP/formatter from touching Markdown
+    vim.bo.formatexpr = ""
+  end,
+})
