@@ -1,0 +1,86 @@
+@import "../omarchy/current/theme/waybar.css";
+
+* {
+    border: none;
+    border-radius: 0;
+    font-family: 'JetBrainsMono Nerd Font', 'Inter';
+    font-size: 13px;
+    min-height: 0;
+}
+
+window#waybar {
+    background: transparent;
+}
+
+/* Base Pill Style */
+#custom-omarchy,
+#workspaces,
+#mpris,
+#clock,
+#network,
+#memory,
+#cpu,
+#pulseaudio,
+#battery,
+#custom-power {
+    background: rgba(26, 27, 38, 0.85); /* Slightly darker for contrast */
+    color: @foreground;
+    border-radius: 10px;
+    padding: 0px 7px;
+    margin: 0px 1px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Arch Menu Icon Specifics */
+#custom-omarchy {
+    color: #1793d1; /* Arch Blue */
+    font-size: 14px;
+    padding: 0 10px;
+}
+
+/* NEW WORKSPACE STYLE: Floating Pill */
+#workspaces {
+    padding: 0px 2px;
+}
+
+#workspaces button {
+    padding: 0px 6px;
+    margin: 2px 2px;
+    color: rgba(205, 214, 244, 0.3);
+    border-radius: 8px;
+    transition: all 0.3s cubic-bezier(.55,-0.68,.48,1.68);
+}
+
+#workspaces button.active {
+    background: @foreground;
+    color: #1e1e2e;
+    padding: 0px 10px; /* Expands the active pill slightly */
+}
+
+#workspaces button.urgent {
+    background: #f38ba8;
+    color: #1e1e2e;
+}
+
+/* Module Coloring */
+#network { color: #89dceb; } /* Cyan/Blue */
+#memory { color: #cba6f7; } /* Mauve */
+#cpu { color: #fab387; }    /* Peach */
+#pulseaudio { color: #a6e3a1; } /* Green */
+#clock { color: #f5c2e7; }  /* Pink */
+#custom-power { 
+    color: #f9e2af; /* Yellow for lightning */
+    font-size: 13px; 
+}
+
+/* MPIRS Styling */
+#mpris {
+    font-size: 9px;
+    color: #94e2d5;
+}
+
+/* Remove hover backgrounds for a cleaner look */
+#workspaces button:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: @foreground;
+}
