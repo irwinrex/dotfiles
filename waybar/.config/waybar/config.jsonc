@@ -36,7 +36,7 @@
   },
 
   "custom/omarchy": {
-    "format": "", // Arch Linux Icon
+    "format": " ", // Arch Linux Icon
     "on-click": "omarchy-menu",
     "tooltip": false
   },
