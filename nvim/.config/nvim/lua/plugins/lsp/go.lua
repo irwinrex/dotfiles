@@ -1,33 +1,23 @@
 -- ~/.config/nvim/lua/plugins/go.lua
 
 return {
-  -- Go specific plugin
+  -- 1. Configure go.nvim (The toolbelt)
   {
     "ray-x/go.nvim",
-    ft = { "go", "gomod", "gowork", "gosum" },
-    dependencies = {
-      "ray-x/guihua.lua",
-      "nvim-treesitter/nvim-treesitter",
+    dependencies = { "ray-x/guihua.lua" },
+    ft = { "go", "gomod", "gowork" },
+    build = ':lua require("go.install").update_all_sync()', -- installs binaries
+    opts = {
+      lsp_cfg = false,                                      -- Handled by LazyVim LSP config below
+      lsp_gofmt = false,                                    -- Handled by conform.nvim
+      lsp_goimport = false,                                 -- Handled by conform.nvim
+      max_line_len = 120,
+      tag_transform = "camelcase",
+      test_runner = "go", -- or "richgo"
     },
-    config = function()
-      require("go").setup({
-        gofmt = "gofumpt", -- format style
-        fillstruct = "gopls",
-        goimports = "goimports",
-        lsp_cfg = false, -- disable internal, handled by LazyVim LSP
-        max_line_len = 120,
-      })
-
-      vim.api.nvim_create_autocmd("BufWritePre", {
-        pattern = "*.go",
-        callback = function()
-          require("go.format").goimport()
-        end,
-      })
-    end,
   },
 
-  -- gopls LSP setup (LazyVim LSP extension)
+  -- 2. Configure gopls (The LSP)
   {
     "neovim/nvim-lspconfig",
     opts = {
@@ -36,8 +26,16 @@ return {
           settings = {
             gopls = {
               gofumpt = true,
-              staticcheck = true,
-              usePlaceholders = true,
+              codelenses = {
+                gc_details = false,
+                generate = true,
+                regenerate_cgo = true,
+                run_govulncheck = true,
+                test = true,
+                tidy = true,
+                upgrade_dependency = true,
+                vendor = true,
+              },
               hints = {
                 assignVariableTypes = true,
                 constantValues = true,
@@ -45,6 +43,13 @@ return {
                 parameterNames = true,
                 rangeVariableTypes = true,
               },
+              analyses = {
+                unusedparams = true,
+                shadow = true,
+              },
+              staticcheck = true,
+              completeUnimported = true,
+              usePlaceholders = true,
             },
           },
         },
@@ -52,30 +57,15 @@ return {
     },
   },
 
-  -- Formatter integration with conform.nvim
+  -- 3. Configure Formatting (The Clean-up)
   {
     "stevearc/conform.nvim",
     opts = {
       formatters_by_ft = {
-        go = { "goimports", "gofumpt" },
+        -- goimports-reviser is often preferred over goimports as it organizes imports better
+        -- install it via Mason: :MasonInstall goimports-reviser
+        go = { "goimports-reviser", "gofumpt" },
       },
     },
-  },
-
-  -- Treesitter Go language support
-  {
-    "nvim-treesitter/nvim-treesitter",
-    opts = {
-      ensure_installed = { "go", "gomod", "gosum", "gowork" },
-    },
-  },
-
-  -- Debugging for Go (DAP)
-  {
-    "mfussenegger/nvim-dap",
-    dependencies = { "leoluz/nvim-dap-go" },
-    config = function(_, _)
-      require("dap-go").setup()
-    end,
   },
 }
