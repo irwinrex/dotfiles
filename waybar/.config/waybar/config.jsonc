@@ -51,7 +51,7 @@
 
   "memory": {
     "interval": 5,
-    "format": "󰍛 {used:0.1f}G",
+    "format": "  {used:0.1f}G",
     "on-click": "omarchy-launch-or-focus-tui btop"
   },
 
@@ -94,8 +94,9 @@
 
   "pulseaudio": {
     "format": "{icon} {volume}%",
+      "headphone": "",
     "format-icons": { "default": ["", "", ""] },
-    "on-click": "omarchy-launch-or-focus-tui wiremix"
+    "on-click": "omarchy-launch-audio"
   },
 
   "battery": {
