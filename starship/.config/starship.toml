@@ -1,0 +1,116 @@
+"$schema" = 'https://starship.rs/config-schema.json'
+
+# =========================
+# LAYOUT
+# =========================
+
+# LEFT prompt (single line)
+format = "$os$username$hostname$directory$git_branch$git_status$status $character"
+
+# RIGHT prompt (context / versions / infra)
+right_format = "$kubernetes$aws$terraform$docker_context $golang$python$nodejs"
+
+add_newline = false
+
+
+# =========================
+# CORE
+# =========================
+
+# [character]
+# success_symbol = "[➜](bold green)"
+# error_symbol   = "[✘](bold red)"
+
+[directory]
+truncation_length = 4
+style = "bold cyan"
+read_only = " 󰌾"
+
+[status]
+disabled = false
+format = '[$symbol]($style) '
+
+
+# =========================
+# VCS (GIT)
+# =========================
+
+[git_branch]
+symbol = " "
+style = "bold 208"
+
+[git_status]
+style = "bold red"
+format = '([\[$all_status$ahead_behind\]]($style) )'
+
+
+# =========================
+# CLOUD / INFRA (RIGHT SIDE)
+# =========================
+
+[kubernetes]
+symbol = "󱃾 "
+style = "bold blue"
+format = '[$symbol$context(\($namespace\))]($style) '
+
+[kubernetes.context_aliases]
+"gke_.*_(?P<cluster>[\\w-]+)" = "gke-$cluster"
+"arn:aws:eks:.*:cluster/(?P<cluster>[\\w-]+)" = "eks-$cluster"
+
+[aws]
+symbol = "󰸏 "
+style = "bold orange"
+format = '[$symbol$profile(\($region\))]($style) '
+
+[terraform]
+symbol = "󱁢 "
+style = "bold 105"
+format = '[$symbol$workspace]($style) '
+
+[docker_context]
+symbol = " "
+style = "bold blue"
+format = '[$symbol$context]($style) '
+
+
+# =========================
+# LANGUAGES / ENVS (RIGHT)
+# =========================
+
+[golang]
+symbol = "󰟓 "
+style = "bold cyan"
+format = '[$symbol$version]($style) '
+
+[python]
+symbol = " "
+style = "bold yellow"
+pyenv_prefix = "venv "
+detect_extensions = ["py"]
+detect_files = [
+  "pyproject.toml",
+  "requirements.txt",
+  "Pipfile",
+  "setup.py",
+  ".python-version"
+]
+detect_folders = [".venv", "venv"]
+
+format = '[$symbol$pyenv_prefix$version(\($virtualenv\))]($style) '
+
+[nodejs]
+symbol = "󰎙 "
+style = "bold green"
+format = '[$symbol$version]($style) '
+
+
+# =========================
+# DISABLED / CLEANUP
+# =========================
+
+[shell]
+disabled = true
+
+[cmd_duration]
+min_time = 500
+style = "bold yellow"
