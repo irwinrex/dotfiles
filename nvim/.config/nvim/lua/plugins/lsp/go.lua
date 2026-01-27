@@ -1,23 +1,7 @@
--- ~/.config/nvim/lua/plugins/go.lua
+-- ~/.config/nvim/lua/plugins/language/go.lua
 
 return {
-  -- 1. Configure go.nvim (The toolbelt)
-  {
-    "ray-x/go.nvim",
-    dependencies = { "ray-x/guihua.lua" },
-    ft = { "go", "gomod", "gowork" },
-    build = ':lua require("go.install").update_all_sync()', -- installs binaries
-    opts = {
-      lsp_cfg = false,                                      -- Handled by LazyVim LSP config below
-      lsp_gofmt = false,                                    -- Handled by conform.nvim
-      lsp_goimport = false,                                 -- Handled by conform.nvim
-      max_line_len = 120,
-      tag_transform = "camelcase",
-      test_runner = "go", -- or "richgo"
-    },
-  },
-
-  -- 2. Configure gopls (The LSP)
+  -- 1. LSP CONFIGURATION (The Core)
   {
     "neovim/nvim-lspconfig",
     opts = {
@@ -25,7 +9,9 @@ return {
         gopls = {
           settings = {
             gopls = {
+              -- Performance: Use gofumpt for stricter formatting
               gofumpt = true,
+              -- 2026 Best Practice: Enable all semantic features
               codelenses = {
                 gc_details = false,
                 generate = true,
@@ -46,26 +32,69 @@ return {
               analyses = {
                 unusedparams = true,
                 shadow = true,
+                unusedwrite = true,
+                useany = true,
               },
               staticcheck = true,
               completeUnimported = true,
               usePlaceholders = true,
+              directoryFilters = { "-.git", "-.vscode", "-.idea", "-node_modules" },
             },
           },
         },
       },
+      -- Enable Inlay Hints (Built-in Neovim 0.10+)
+      setup = {
+        gopls = function(_, opts)
+          vim.api.nvim_create_autocmd("LspAttach", {
+            callback = function(args)
+              local client = vim.lsp.get_client_by_id(args.data.client_id)
+              if client and client.name == "gopls" then
+                -- Enable inlay hints by default for Go
+                vim.lsp.inlay_hint.enable(true, { bufnr = args.buf })
+              end
+            end,
+          })
+        end,
+      },
     },
   },
 
-  -- 3. Configure Formatting (The Clean-up)
+  -- 2. TOOLING (Mason ensures everything is installed)
+  {
+    "williamboman/mason.nvim",
+    opts = function(_, opts)
+      opts.ensure_installed = opts.ensure_installed or {}
+      vim.list_extend(opts.ensure_installed, {
+        "gopls",
+        "gofumpt",
+        "goimports-reviser",
+        "delve", -- Debugger
+      })
+    end,
+  },
+
+  -- 3. FORMATTING (Fast & Deterministic)
   {
     "stevearc/conform.nvim",
     opts = {
       formatters_by_ft = {
-        -- goimports-reviser is often preferred over goimports as it organizes imports better
-        -- install it via Mason: :MasonInstall goimports-reviser
         go = { "goimports-reviser", "gofumpt" },
       },
     },
   },
+
+  -- 4. COMPLETION (Blink - Fast Rust-based completion)
+  {
+    "saghen/blink.cmp",
+    opts = {
+      sources = {
+        default = { "lsp", "path", "snippets", "buffer" },
+      },
+    },
+  },
+
+  -- 5. OPTIONAL: If you still need "go.nvim" tools (tags, struct helpers)
+  -- Use a much lighter alternative or just the keymaps
+  -- Recommendation: Drop ray-x/go.nvim for pure performance.
 }
