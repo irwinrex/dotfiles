@@ -1,30 +1,22 @@
 -- plugins/lsp.lua
 return {
-
   ---------------------------------------------------------------------------
-  -- Mason v2.1.0 - Package Manager
+  -- Mason (Package Management)
   ---------------------------------------------------------------------------
   {
-    "mason-org/mason.nvim",
-    lazy = false,
+    "williamboman/mason.nvim",
+    cmd = "Mason",
     opts = {
-      registries = {
-        "github:mason-org/mason-registry",
-      },
-      ui = {
-        border = "rounded",
-      },
+      ui = { border = "rounded" },
+      ensure_installed = { "tflint" }, -- Non-LSP tools go here
     },
   },
 
   ---------------------------------------------------------------------------
-  -- Mason-LSPConfig (automatic installation + handlers)
+  -- Mason-LSPConfig (Automatic Installation only)
   ---------------------------------------------------------------------------
   {
-    "mason-org/mason-lspconfig.nvim",
-    lazy = false,
-    dependencies = { "mason-org/mason.nvim", "neovim/nvim-lspconfig" },
-
+    "williamboman/mason-lspconfig.nvim",
     opts = {
       ensure_installed = {
         "lua_ls",
@@ -39,138 +31,91 @@ return {
         "cssls",
         "jsonls",
         "terraformls",
-        "tflint",
       },
+      -- 2026 Best Practice: Let nvim-lspconfig handle the setup via 'servers'
+      automatic_enable = true,
+    },
+  },
 
-      automatic_install = true,
-
-      handlers = {
-
-        -- default handler for MOST servers
-        function(server_name)
-          require("lspconfig")[server_name].setup({})
-        end,
-
-        ---------------------------------------------------------------------
-        -- LANGUAGE SPECIFIC HANDLERS
-        ---------------------------------------------------------------------
-
-        -- Lua
-        lua_ls = function()
-          require("lspconfig").lua_ls.setup({
-            settings = {
-              Lua = {
-                diagnostics = { globals = { "vim" } },
-                completion = { callSnippet = "Replace" },
-                telemetry = { enable = false },
-              },
+  ---------------------------------------------------------------------------
+  -- nvim-lspconfig (Server Logic & UI)
+  ---------------------------------------------------------------------------
+  {
+    "neovim/nvim-lspconfig",
+    opts = {
+      -- 1. Modern Diagnostic UI (0.11+ Native signs)
+      diagnostics = {
+        underline = true,
+        update_in_insert = false,
+        severity_sort = true,
+        signs = {
+          text = {
+            [vim.diagnostic.severity.ERROR] = "✘",
+            [vim.diagnostic.severity.WARN] = "▲",
+            [vim.diagnostic.severity.HINT] = "◆",
+            [vim.diagnostic.severity.INFO] = "●",
+          },
+        },
+      },
+      -- 2. Inlay Hints (Built-in standard)
+      inlay_hints = { enabled = true },
+      -- 3. Server-Specific Settings
+      servers = {
+        lua_ls = {
+          settings = {
+            Lua = {
+              diagnostics = { globals = { "vim" } },
+              completion = { callSnippet = "Replace" },
+              telemetry = { enable = false },
             },
-          })
-        end,
-
-        -- Go
-        gopls = function()
-          require("lspconfig").gopls.setup({
-            settings = {
-              gopls = {
-                usePlaceholders = true,
-                staticcheck = true,
-                gofumpt = true,
-              },
+          },
+        },
+        gopls = {
+          settings = {
+            gopls = {
+              usePlaceholders = true,
+              staticcheck = true,
+              gofumpt = true,
             },
-          })
-        end,
-
-        -- TypeScript & JavaScript (ts_ls replaces deprecated tsserver)
-        ts_ls = function()
-          require("lspconfig").ts_ls.setup({
-            settings = {
-              typescript = {
-                format = { indentSize = 2 },
-                preferences = { importModuleSpecifier = "non-relative" },
-              },
+          },
+        },
+        ts_ls = {
+          settings = {
+            typescript = {
+              format = { indentSize = 2 },
+              preferences = { importModuleSpecifier = "non-relative" },
             },
-          })
-        end,
-
-        -- HTML
-        html = function()
-          require("lspconfig").html.setup({
-            filetypes = { "html", "templ" },
-          })
-        end,
-
-        -- CSS
-        cssls = function()
-          require("lspconfig").cssls.setup({
-            settings = {
-              css = { validate = true },
-              scss = { validate = true },
-              less = { validate = true },
-            },
-          })
-        end,
-
-        -- TFLint
-        tflint = function()
-          require("lspconfig").tflint.setup({})
-        end,
+          },
+        },
+        html = { filetypes = { "html", "templ" } },
+        cssls = {
+          settings = {
+            css = { validate = true },
+            scss = { validate = true },
+            less = { validate = true },
+          },
+        },
+        terraformls = {},
+        tflint = {},
       },
     },
   },
 
   ---------------------------------------------------------------------------
-  -- Extend LazyVim built-in LSPConfig
-  ---------------------------------------------------------------------------
-  {
-    "neovim/nvim-lspconfig",
-    lazy = false,
-
-    opts = function(_, opts)
-      local signs = { Error = "✘", Warn = "▲", Hint = "◆", Info = "●" }
-      for type, icon in pairs(signs) do
-        local hl = "DiagnosticSign" .. type
-        vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
-      end
-
-      vim.api.nvim_create_autocmd("LspAttach", {
-        group = vim.api.nvim_create_augroup("UserLspKeymaps", { clear = true }),
-        callback = function(event)
-          local lsp_opts = { buffer = event.buf, silent = true }
-
-          vim.keymap.set("n", "gd", vim.lsp.buf.definition, lsp_opts)
-          vim.keymap.set("n", "gD", vim.lsp.buf.declaration, lsp_opts)
-          vim.keymap.set("n", "gi", vim.lsp.buf.implementation, lsp_opts)
-          vim.keymap.set("n", "gr", vim.lsp.buf.references, lsp_opts)
-          vim.keymap.set("n", "gt", vim.lsp.buf.type_definition, lsp_opts)
-          vim.keymap.set("n", "K", vim.lsp.buf.hover, lsp_opts)
-          vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, lsp_opts)
-          vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, lsp_opts)
-
-          vim.keymap.set("n", "<leader>f", function()
-            require("conform").format({ async = true, lsp_fallback = true })
-          end, lsp_opts)
-
-          vim.keymap.set("n", "<leader>d", vim.diagnostic.open_float, lsp_opts)
-        end,
-      })
-
-      return opts
-    end,
-  },
-
-  ---------------------------------------------------------------------------
-  -- Completion
+  -- Completion (blink.cmp)
   ---------------------------------------------------------------------------
   {
     "saghen/blink.cmp",
-    lazy = false,
-    version = "*",
     opts = {
       keymap = { preset = "default" },
-      completion = { documentation = { auto_show = true } },
-      signature = { enabled = true },
-      sources = { default = { "lsp", "path", "buffer" } },
+      completion = {
+        documentation = { auto_show = true, window = { border = "rounded" } },
+        ghost_text = { enabled = true },
+      },
+      signature = { enabled = true, window = { border = "rounded" } },
+      sources = {
+        default = { "lsp", "path", "snippets", "buffer" },
+      },
     },
   },
 }

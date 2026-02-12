@@ -1,7 +1,9 @@
 -- ~/.config/nvim/lua/plugins/language/go.lua
 
 return {
-  -- 1. LSP CONFIGURATION (The Core)
+  ---------------------------------------------------------------------------
+  -- 1. LSP & Inlay Hints
+  ---------------------------------------------------------------------------
   {
     "neovim/nvim-lspconfig",
     opts = {
@@ -9,72 +11,34 @@ return {
         gopls = {
           settings = {
             gopls = {
-              -- Performance: Use gofumpt for stricter formatting
               gofumpt = true,
-              -- 2026 Best Practice: Enable all semantic features
-              codelenses = {
-                gc_details = false,
-                generate = true,
-                regenerate_cgo = true,
-                run_govulncheck = true,
-                test = true,
-                tidy = true,
-                upgrade_dependency = true,
-                vendor = true,
-              },
+              codelenses = { generate = true, run_govulncheck = true, test = true, tidy = true },
               hints = {
                 assignVariableTypes = true,
-                constantValues = true,
-                functionTypeParameters = true,
                 parameterNames = true,
                 rangeVariableTypes = true,
               },
-              analyses = {
-                unusedparams = true,
-                shadow = true,
-                unusedwrite = true,
-                useany = true,
-              },
+              analyses = { unusedparams = true, shadow = true },
               staticcheck = true,
-              completeUnimported = true,
-              usePlaceholders = true,
-              directoryFilters = { "-.git", "-.vscode", "-.idea", "-node_modules" },
+              vulncheck = "Imports",
             },
           },
         },
       },
-      -- Enable Inlay Hints (Built-in Neovim 0.10+)
-      setup = {
-        gopls = function(_, opts)
-          vim.api.nvim_create_autocmd("LspAttach", {
-            callback = function(args)
-              local client = vim.lsp.get_client_by_id(args.data.client_id)
-              if client and client.name == "gopls" then
-                -- Enable inlay hints by default for Go
-                vim.lsp.inlay_hint.enable(true, { bufnr = args.buf })
-              end
-            end,
-          })
-        end,
-      },
+      inlay_hints = { enabled = true },
     },
   },
 
-  -- 2. TOOLING (Mason ensures everything is installed)
+  ---------------------------------------------------------------------------
+  -- 2. Tooling & Formatting (Consolidated)
+  ---------------------------------------------------------------------------
   {
     "williamboman/mason.nvim",
     opts = function(_, opts)
-      opts.ensure_installed = opts.ensure_installed or {}
-      vim.list_extend(opts.ensure_installed, {
-        "gopls",
-        "gofumpt",
-        "goimports-reviser",
-        "delve", -- Debugger
-      })
+      vim.list_extend(opts.ensure_installed, { "gopls", "gofumpt", "goimports-reviser", "delve" })
     end,
   },
 
-  -- 3. FORMATTING (Fast & Deterministic)
   {
     "stevearc/conform.nvim",
     opts = {
@@ -84,7 +48,26 @@ return {
     },
   },
 
-  -- 4. COMPLETION (Blink - Fast Rust-based completion)
+  ---------------------------------------------------------------------------
+  -- 3. Lightweight Helpers (Struct Tags & Impls)
+  ---------------------------------------------------------------------------
+  {
+    "olexsmir/gopher.nvim",
+    ft = "go",
+    build = function()
+      vim.cmd.MasonInstall("gomodifytags impl")
+    end,
+    opts = {},
+    keys = {
+      { "<leader>gsj", "<cmd>GoTagAdd json<cr>", desc = "Add JSON tags" },
+      { "<leader>gsy", "<cmd>GoTagAdd yaml<cr>", desc = "Add YAML tags" },
+      { "<leader>gie", "<cmd>GoIfErr<cr>", desc = "Generate if err" },
+    },
+  },
+
+  ---------------------------------------------------------------------------
+  -- 4. Completion
+  ---------------------------------------------------------------------------
   {
     "saghen/blink.cmp",
     opts = {
@@ -93,8 +76,4 @@ return {
       },
     },
   },
-
-  -- 5. OPTIONAL: If you still need "go.nvim" tools (tags, struct helpers)
-  -- Use a much lighter alternative or just the keymaps
-  -- Recommendation: Drop ray-x/go.nvim for pure performance.
 }

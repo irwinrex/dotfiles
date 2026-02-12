@@ -1,44 +1,42 @@
 -- ~/.config/nvim/lua/plugins/language/python.lua
 
 return {
+  ---------------------------------------------------------------------------
   -- 1. LSP CONFIGURATION
+  ---------------------------------------------------------------------------
   {
     "neovim/nvim-lspconfig",
     opts = {
       servers = {
-        -- 2026 Best Practice: Use 'ruff' server, NOT 'ruff_lsp'
         ruff = {
-          -- Performance: Disable ruff's hover in favor of basedpyright
-          on_attach = function(client)
-            client.server_capabilities.hoverProvider = false
-          end,
-          settings = {
-            -- Any specific ruff settings go here
-            args = {},
+          setup = {
+            on_attach = function(client)
+              client.server_capabilities.hoverProvider = false
+            end,
           },
         },
 
-        -- Basedpyright for Type Checking & IntelliSense
         basedpyright = {
           settings = {
             basedpyright = {
               analysis = {
-                typeCheckingMode = "basic", -- "standard" for stricter, "basic" for speed
+                typeCheckingMode = "basic",
                 autoSearchPaths = true,
                 useLibraryCodeForTypes = true,
-                diagnosticMode = "openFilesOnly", -- HUGE performance boost for large repos
+                diagnosticMode = "openFilesOnly",
               },
             },
           },
         },
 
-        -- Disable standard pyright to prevent conflicts
         pyright = { enabled = false },
       },
     },
   },
 
-  -- 2. TOOLING (Mason ensures everything is installed)
+  ---------------------------------------------------------------------------
+  -- 2. TOOLING (Mason Integration)
+  ---------------------------------------------------------------------------
   {
     "williamboman/mason.nvim",
     opts = function(_, opts)
@@ -47,25 +45,27 @@ return {
     end,
   },
 
+  ---------------------------------------------------------------------------
   -- 3. FORMATTING (Conform)
-  -- Ruff is the fastest formatter in the ecosystem.
+  ---------------------------------------------------------------------------
   {
     "stevearc/conform.nvim",
     opts = {
       formatters_by_ft = {
-        python = { "ruff_format", "ruff_organize_imports" },
+        -- Ruff handles both layout and import sorting in a single pass
+        python = { "ruff_organize_imports", "ruff_format" },
       },
     },
   },
 
-  -- 4. PERFORMANCE TWEAK: LSP CAPABILITIES
-  -- Ensure blink.cmp is used for Python completion
+  ---------------------------------------------------------------------------
+  -- 4. COMPLETION (Blink.cmp)
+  ---------------------------------------------------------------------------
   {
     "saghen/blink.cmp",
-    opts = {
-      sources = {
-        default = { "lsp", "path", "snippets", "buffer" },
-      },
-    },
+    opts = function(_, opts)
+      opts.sources = opts.sources or {}
+      opts.sources.default = { "lsp", "path", "snippets", "buffer" }
+    end,
   },
 }
