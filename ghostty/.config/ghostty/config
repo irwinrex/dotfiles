@@ -16,6 +16,9 @@ window-padding-y = 12
 confirm-close-surface = false
 resize-overlay = never
 
+# --- Terminal ---
+term = xterm-256color
+
 # --- Transparency ---
 background-opacity = 0.96
 
@@ -29,6 +32,7 @@ scrollback-limit = 100000000
 # --- Mouse ---
 mouse-hide-while-typing = true
 mouse-scroll-multiplier = 3
+copy-on-select = clipboard
 
 # --- Shell Integration ---
 shell-integration = detect
