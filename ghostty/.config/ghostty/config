@@ -1,67 +1,45 @@
 #====================================================================
-# Ghostty — Portable, tmux-safe, Modern (Updated 2026)
+# Ghostty — Final Valid Config
 #====================================================================
 
 # --- Font ---
-# JetBrains Mono is the default, but specifying it is fine.
-font-family = "JetBrains Mono"
+font-family = JetBrains Mono
 font-style = Regular
-font-size = 12
-# Optional: Improve font rendering on high-DPI screens
+font-size = 14
 font-thicken = false
 
 # --- Window & Appearance ---
-# 'theme' sets the color scheme. 'window-theme' sets the OS titlebar (system/light/dark).
-theme = "catppuccin-mocha" 
-window-theme = system
-
-# Window padding (balanced for aesthetics)
-window-padding-x = 14
-window-padding-y = 14
-
-# Interaction
+theme = Catppuccin Mocha
+window-decoration = true
+window-padding-x = 12
+window-padding-y = 12
 confirm-close-surface = false
 resize-overlay = never
 
-# Replaces deprecated 'gtk-toolbar-style'. 
-# Set to 'false' for a borderless/flat look, or 'true' for standard window controls.
-window-decoration = true
-
 # --- Transparency ---
-# Background opacity (0.0 to 1.0)
-background-opacity = 0.75
-# Blur helps readability with transparency (macOS/supported Linux compositors)
-background-blur-radius = 20
+background-opacity = 0.96
 
 # --- Cursor ---
 cursor-style = block
 cursor-style-blink = false
 
-# --- Shell Integration (Tmux Safe) ---
-# 'no-cursor' prevents the shell from changing your cursor shape back to a bar
-shell-integration-features = ssh-env,no-cursor
+# --- Scrollback ---
+scrollback-limit = 100000000
+
+# --- Mouse ---
+mouse-hide-while-typing = true
+mouse-scroll-multiplier = 3
+
+# --- Shell Integration ---
+shell-integration = detect
+shell-integration-features = no-cursor,no-title,ssh-env,ssh-terminfo
 
 # --- Clipboard ---
-# Modern syntax for clipboard permissions
 clipboard-read = allow
 clipboard-write = allow
 clipboard-paste-protection = true
 
-# --- Keyboard Mappings ---
-# Copy/Paste standards
+# --- Keybinds ---
 keybind = shift+insert=paste_from_clipboard
-keybind = control+insert=copy_to_clipboard
-
-# Split Resizing (Native Ghostty Splits)
-# Note: These resize Ghostty's splits, not tmux panes.
-keybind = super+control+shift+alt+arrow_down=resize_split:down,10
-keybind = super+control+shift+alt+arrow_up=resize_split:up,10
-keybind = super+control+shift+alt+arrow_left=resize_split:left,10
-keybind = super+control+shift+alt+arrow_right=resize_split:right,10
-
-# --- Mouse ---
-mouse-scroll-multiplier = 0.95
-
-# --- Shader ---
-# Ensure this file exists at ~/.config/ghostty/shader/cursor_smear.glsl
-custom-shader = ~/.config/ghostty/shader/cursor_smear.glsl
+keybind = ctrl+insert=copy_to_clipboard
+keybind = ctrl+b=text:\x02
