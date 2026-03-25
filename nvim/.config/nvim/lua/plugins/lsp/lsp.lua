@@ -1,32 +1,103 @@
--- plugins/lsp.lua
+-- ~/plugins/lsp.lua
+--
+-- LazyVim LSP override — DevOps stack
+-- Targets: Neovim 0.11+ · LazyVim latest · mason-org/* (2025-2026)
 return {
+
   ---------------------------------------------------------------------------
-  -- 1. SchemaStore & Linting (The DevOps Core)
+  -- 0. Filetype detection — must run at startup, before any LSP event fires
+  ---------------------------------------------------------------------------
+  {
+    -- Attach to a plugin that loads at VeryLazy so this runs early but after
+    "nvim-lua/plenary.nvim",
+    lazy = true,
+    init = function()
+      vim.filetype.add({
+        -- ── Exact filenames (basename == full match only for root-level files)
+        filename = {
+          ["Jenkinsfile"] = "groovy",
+        },
+
+        -- ── Pattern-based (full-path aware, always use leading .*)
+        pattern = {
+          -- Dockerfile.<suffix>  →  dockerfile
+          -- Handles:  Dockerfile.alpha  Dockerfile.prod  dockerfile.dev  etc.
+          [".*[Dd]ockerfile%..+"] = "dockerfile",
+
+          -- Jenkinsfile.<suffix>  →  groovy
+          -- Handles:  Jenkinsfile.alpha  Jenkinsfile.beta  Jenkinsfile.prod
+          [".*Jenkinsfile%..+"] = "groovy",
+
+          -- <n>.jenkinsfile  →  groovy
+          -- Handles:  service.jenkinsfile  app.jenkinsfile
+          [".*%.jenkinsfile"] = "groovy",
+
+          -- Bare environment files: alpha / beta / prod / staging / dev / uat
+          [".*/(alpha|beta|prod|staging|demo|dev|uat)$"] = {
+            priority = 10,
+            function(_, bufnr)
+              -- Guard: bufnr may not be loaded yet
+              if not vim.api.nvim_buf_is_loaded(bufnr) then
+                return nil
+              end
+              local lines = vim.api.nvim_buf_get_lines(bufnr, 0, 20, false)
+              for _, line in ipairs(lines) do
+                local trimmed = line:match("^%s*(.-)%s*$")
+                if trimmed ~= "" then
+                  if trimmed:match("^pipeline%s*{") or trimmed:match("^node%s*[({]") then
+                    return "groovy"
+                  end
+                  -- First non-blank line didn't match → not a Jenkinsfile
+                  return nil
+                end
+              end
+            end,
+          },
+
+          -- Ansible role/task YAML → yaml.ansible
+          [".*/tasks/.*%.ya?ml"] = "yaml.ansible",
+          [".*/playbooks/.*%.ya?ml"] = "yaml.ansible",
+          [".*/handlers/.*%.ya?ml"] = "yaml.ansible",
+          [".*/roles/.*%.ya?ml"] = "yaml.ansible",
+        },
+      })
+    end,
+  },
+
+  ---------------------------------------------------------------------------
+  -- 1. SchemaStore — lazy helper, no setup needed
   ---------------------------------------------------------------------------
   { "b0o/SchemaStore.nvim", lazy = true },
+
+  ---------------------------------------------------------------------------
+  -- 2. nvim-lint — linting layer (separate from LSP)
+  ---------------------------------------------------------------------------
   {
     "mfussenegger/nvim-lint",
     event = { "BufReadPre", "BufNewFile" },
-    config = function()
-      local lint = require("lint")
-
-      lint.linters_by_ft = {
+    opts = {
+      linters_by_ft = {
         yaml = { "yamllint", "actionlint" },
-        ansible = { "ansible-lint" },
+        ["yaml.ansible"] = { "ansible-lint" },
         dockerfile = { "hadolint" },
         json = { "jsonlint" },
-      }
+      },
+    },
+    config = function(_, opts)
+      local lint = require("lint")
 
-      -- Deduplicated augroup to avoid duplicate autocmds on re-source
-      local lint_group = vim.api.nvim_create_augroup("DevOpsLint", { clear = true })
+      lint.linters_by_ft = vim.tbl_deep_extend("force", lint.linters_by_ft or {}, opts.linters_by_ft)
 
-      vim.api.nvim_create_autocmd({ "BufWritePost", "BufReadPost" }, {
-        group = lint_group,
-        callback = function()
+      local aug = vim.api.nvim_create_augroup("DevOpsLint", { clear = true })
+
+      vim.api.nvim_create_autocmd({ "BufWritePost", "BufReadPost", "InsertLeave" }, {
+        group = aug,
+        callback = function(ev)
+          -- try_lint() is a no-op when no linter matches the current ft
           lint.try_lint()
 
-          -- Run kube-linter only if file looks like a Kubernetes manifest
-          local lines = vim.api.nvim_buf_get_lines(0, 0, 10, false)
+          -- kube-linter only for Kubernetes manifests
+          local lines = vim.api.nvim_buf_get_lines(ev.buf, 0, 15, false)
           for _, line in ipairs(lines) do
             if line:match("^apiVersion:") then
               lint.try_lint("kube-linter")
@@ -39,80 +110,59 @@ return {
   },
 
   ---------------------------------------------------------------------------
-  -- 2. Mason (Binary Management)
+  -- 3. Mason — extend ensure_installed with linter/formatter binaries only.
   ---------------------------------------------------------------------------
   {
     "mason-org/mason.nvim",
-    cmd = "Mason",
     opts = {
       ui = { border = "rounded" },
       ensure_installed = {
-        "actionlint",
-        "ansible-lint",
-        "yamllint",
-        "prettier",
-        "hadolint",
-        "kube-linter",
-        "shfmt",
+        "actionlint", -- GitHub Actions linter
+        "ansible-lint", -- Ansible linter
+        "yamllint", -- YAML linter
+        "hadolint", -- Dockerfile linter
+        "kube-linter", -- Kubernetes manifest linter
+        "prettier", -- Multi-language formatter
+        "shfmt", -- Shell formatter
+        "jsonlint", -- JSON linter
       },
     },
   },
 
   ---------------------------------------------------------------------------
-  -- 3. LSP Configuration
-  -- LazyVim 2026: uses vim.lsp.config() + automatic_enable via mason-lspconfig
-  -- Handlers pattern is deprecated — use opts.servers + opts.setup instead
+  -- 4. nvim-lspconfig — extend LazyVim's spec via opts only.
+  --
+  --    LazyVim's configure() loop (lsp/init.lua) will:
+  --      • Call vim.lsp.config(server, sopts) for every key in opts.servers
+  --      • Pass servers to mason-lspconfig.setup({ ensure_installed })
+  --      • Respect setup[server] overrides that return true to skip auto-setup
+  --      • Keep its own LspAttach autocmds for keymaps / inlay hints / codelens
+  --
+  --    DO NOT call mason-lspconfig.setup() or vim.lsp.config() here yourself.
   ---------------------------------------------------------------------------
   {
     "neovim/nvim-lspconfig",
-    event = { "BufReadPre", "BufNewFile" },
-    dependencies = {
-      "mason-org/mason.nvim",
-      -- config = function() end tells LazyVim NOT to call setup() itself
-      { "mason-org/mason-lspconfig.nvim", config = function() end },
-      "saghen/blink.cmp",
-    },
     opts = {
-      -- vim.diagnostic.config() options
-      diagnostics = {
-        underline = true,
-        update_in_insert = false,
-        virtual_text = {
-          spacing = 4,
-          source = "if_many",
-          prefix = "●",
-        },
-        severity_sort = true,
-        signs = {
-          text = {
-            [vim.diagnostic.severity.ERROR] = "✘",
-            [vim.diagnostic.severity.WARN] = "▲",
-            [vim.diagnostic.severity.HINT] = "◆",
-            [vim.diagnostic.severity.INFO] = "●",
-          },
-        },
-      },
-
-      inlay_hints = { enabled = true },
-
-      -- setup[server] = function(server, opts) return true to skip auto-setup
-      setup = {},
-
       servers = {
-        -- JENKINS
+
+        -- ── Groovy / Jenkins ─────────────────────────────────────────────
         groovy_ls = {},
 
-        -- ANSIBLE
+        -- ── Ansible ──────────────────────────────────────────────────────
         ansiblels = {},
 
-        -- YAML: SchemaStore + disable on Ansible buffers
+        -- ── YAML (SchemaStore; self-stops on Ansible buffers) ─────────────
         yamlls = {
+          -- Stop yamlls when ansiblels already owns the buffer
           on_attach = function(client, bufnr)
             if vim.bo[bufnr].filetype == "yaml.ansible" then
               client.stop()
             end
           end,
+          -- Inject SchemaStore schemas before the server starts
           on_new_config = function(new_config)
+            new_config.settings = new_config.settings or {}
+            new_config.settings.yaml = new_config.settings.yaml or {}
             new_config.settings.yaml.schemas = vim.tbl_deep_extend(
               "force",
               new_config.settings.yaml.schemas or {},
@@ -125,125 +175,61 @@ return {
               keyOrdering = false,
               format = { enable = true },
               validate = true,
+              -- Must be false when using the SchemaStore plugin
               schemaStore = { enable = false, url = "" },
             },
           },
         },
 
-        -- DOCKER / SHELL / LUA
+        -- ── Docker ───────────────────────────────────────────────────────
         dockerls = {},
+
+        -- ── Shell ─────────────────────────────────────────────────────────
         bashls = {},
+
+        -- ── Lua (Neovim config) ───────────────────────────────────────────
         lua_ls = {
           settings = {
-            Lua = { diagnostics = { globals = { "vim" } } },
+            Lua = {
+              diagnostics = { globals = { "vim" } },
+              workspace = { checkThirdParty = false },
+              telemetry = { enable = false },
+            },
           },
         },
 
-        -- JSON: SchemaStore
+        -- ── JSON (SchemaStore) ────────────────────────────────────────────
         jsonls = {
           on_new_config = function(new_config)
+            new_config.settings = new_config.settings or {}
+            new_config.settings.json = new_config.settings.json or {}
             new_config.settings.json.schemas = new_config.settings.json.schemas or {}
             vim.list_extend(new_config.settings.json.schemas, require("schemastore").json.schemas())
           end,
-          settings = { json = { validate = { enable = true } } },
+          settings = {
+            json = { validate = { enable = true } },
+          },
         },
       },
+
+      -- Return true from a setup function to skip LazyVim's auto-configure
+      -- for that server and take full manual control.
+      setup = {},
     },
-
-    config = function(_, opts)
-      -- ── Filetype detection ──────────────────────────────────────────────
-      vim.filetype.add({
-        filename = {
-          -- Jenkinsfile variants → groovy LSP
-          ["Jenkinsfile"] = "groovy",
-          ["alpha"] = "groovy",
-          ["beta"] = "groovy",
-          ["prod"] = "groovy",
-
-          -- Dockerfile variants → dockerls
-          ["Dockerfile.alpha"] = "dockerfile",
-          ["Dockerfile.beta"] = "dockerfile",
-          ["Dockerfile.prod"] = "dockerfile",
-          ["Dockerfile.demo"] = "dockerfile",
-        },
-        pattern = {
-          -- Dynamic Jenkinsfile patterns
-          [".*%.jenkinsfile"] = "groovy",
-          ["Jenkinsfile%..+"] = "groovy",
-
-          -- Dynamic Dockerfile patterns
-          ["Dockerfile%..+"] = "dockerfile",
-
-          -- Ansible detection
-          [".*/tasks/.*%.ya?ml"] = "yaml.ansible",
-          [".*/playbooks/.*%.ya?ml"] = "yaml.ansible",
-          [".*/handlers/.*%.ya?ml"] = "yaml.ansible",
-          [".*/roles/.*%.ya?ml"] = "yaml.ansible",
-        },
-      })
-
-      -- ── Diagnostics ─────────────────────────────────────────────────────
-      vim.diagnostic.config(opts.diagnostics)
-
-      -- ── Inlay hints (Neovim 0.10+) ──────────────────────────────────────
-      if opts.inlay_hints.enabled then
-        vim.api.nvim_create_autocmd("LspAttach", {
-          callback = function(args)
-            local client = vim.lsp.get_client_by_id(args.data.client_id)
-            if client and client.supports_method("textDocument/inlayHint") then
-              vim.lsp.inlay_hint.enable(true, { bufnr = args.buf })
-            end
-          end,
-        })
-      end
-
-      -- ── blink.cmp capabilities ───────────────────────────────────────────
-      local capabilities = require("blink.cmp").get_lsp_capabilities()
-
-      -- ── mason-lspconfig: automatic_enable replaces handlers pattern ──────
-      local mason_lspconfig = require("mason-lspconfig")
-      local server_names = vim.tbl_keys(opts.servers)
-
-      mason_lspconfig.setup({
-        ensure_installed = server_names,
-        automatic_enable = true,
-      })
-
-      -- Configure each server via vim.lsp.config() (Neovim 0.11+ native API)
-      for server, server_opts in pairs(opts.servers) do
-        server_opts = vim.tbl_deep_extend("force", {
-          capabilities = capabilities,
-        }, server_opts)
-
-        -- Allow per-server setup override
-        local setup_override = opts.setup[server] or opts.setup["*"]
-        if not (setup_override and setup_override(server, server_opts)) then
-          vim.lsp.config(server, server_opts)
-        end
-      end
-    end,
   },
 
   ---------------------------------------------------------------------------
-  -- 4. Completion (blink.cmp)
+  -- 5. blink.cmp — extend LazyVim's spec only where we need custom behaviour.
+  --    Keymap preset, appearance, and sources are already set by LazyVim.
   ---------------------------------------------------------------------------
   {
     "saghen/blink.cmp",
-    version = "*",
     opts = {
-      keymap = { preset = "default" },
-      appearance = {
-        use_nvim_cmp_as_default = true,
-        nerd_font_variant = "mono",
-      },
       completion = {
         documentation = { auto_show = true, window = { border = "rounded" } },
         ghost_text = { enabled = true },
       },
       signature = { enabled = true, window = { border = "rounded" } },
-      sources = {
-        default = { "lsp", "path", "snippets", "buffer" },
-      },
     },
   },
 }
