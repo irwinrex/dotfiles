@@ -18,7 +18,6 @@ return {
         "typescript",
         "tsx",
         "json",
-        "jsonc",
         -- Systems
         "bash",
         "c",

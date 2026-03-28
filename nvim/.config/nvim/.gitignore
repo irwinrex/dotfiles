@@ -1,9 +1,19 @@
+# LazyVim/Lazy.nvim
+lazy-lock.json
+
+# Build artifacts
 tt.*
+*.log
+
+# Test/Debug
 .tests
-doc/tags
 debug
 .repro
 foo.*
-*.log
+
+# Docs
+doc/tags
+
+# Data
 data
-lazy-lock.json
+plugin*

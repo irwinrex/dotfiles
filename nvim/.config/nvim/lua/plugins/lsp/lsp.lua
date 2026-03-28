@@ -1,30 +1,32 @@
--- LazyVim LSP override — DevOps stack
+-- LazyVim LSP configuration with all language servers
 return {
   { "b0o/SchemaStore.nvim", lazy = true },
-
-  {
-    "mason-org/mason.nvim",
-    opts = {
-      ui = { border = "rounded" },
-      ensure_installed = {
-        "actionlint",
-        "ansible-lint",
-        "yamllint",
-        "hadolint",
-        "kube-linter",
-        "prettier",
-        "shfmt",
-        "jsonlint",
-      },
-    },
-  },
 
   {
     "neovim/nvim-lspconfig",
     opts = {
       servers = {
-        groovy_ls = {},
+        -- LSP Servers (will be auto-installed via mason-lspconfig)
+        gopls = {},
+        rust_analyzer = {},
+        ts_ls = {},
+        basedpyright = {},
+        pyright = {},
+        ruff = {},
+        clangd = {},
+        html = {},
+        cssls = {},
+        jsonls = {},
+        yamlls = {},
+        marksman = {},
+        bashls = {},
         dockerls = {},
+        docker_compose_language_service = {},
+        terraformls = {},
+        ansiblels = {},
+        quick_lint_js = {},
+        alloy = {},
+        groovy_ls = {},
         lua_ls = {
           settings = {
             Lua = {

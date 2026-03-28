@@ -38,20 +38,6 @@ return {
     },
   },
   {
-    "williamboman/mason.nvim",
-    opts = function(_, opts)
-      vim.list_extend(opts.ensure_installed, {
-        "gopls",
-        "gofumpt",
-        "goimports-reviser",
-        "delve",
-        "golangci-lint",
-        "golint",
-        "govet",
-      })
-    end,
-  },
-  {
     "olexsmir/gopher.nvim",
     ft = "go",
     build = function()
