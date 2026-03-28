@@ -1,5 +1,4 @@
--- plugins/treesitter.lua
-
+-- Treesitter configuration
 return {
   {
     "nvim-treesitter/nvim-treesitter",
@@ -7,26 +6,40 @@ return {
     event = "VeryLazy",
     opts = {
       ensure_installed = {
+        -- Core
         "lua",
         "vim",
         "vimdoc",
         "query",
-        "markdown",
-        "markdown_inline",
-        "python",
+        -- Web
+        "html",
+        "css",
         "javascript",
         "typescript",
         "tsx",
         "json",
-        "html",
-        "css",
+        "jsonc",
+        -- Systems
         "bash",
         "c",
+        "cpp",
         "go",
         "rust",
+        "python",
+        "ruby",
+        -- DevOps
         "yaml",
+        "toml",
         "dockerfile",
+        "hcl",
         "groovy",
+        -- Data
+        "sql",
+        "graphql",
+        -- Docs
+        "markdown",
+        "markdown_inline",
+        "latex",
       },
       sync_install = false,
       auto_install = true,
