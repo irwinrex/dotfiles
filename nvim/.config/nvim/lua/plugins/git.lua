@@ -49,8 +49,7 @@ return {
     "kdheepak/lazygit.nvim",
     cmd = "LazyGit",
     keys = {
-      { "<leader>gg", "<cmd>LazyGit<cr>", desc = "LazyGit" },
-      { "<leader>gf", "<cmd>LazyGitCurrentFile<cr>", desc = "LazyGit Current File" },
+      { "<leader>gg", "<cmd>LazyGitCurrentFile<cr>", desc = "LazyGit" },
     },
   },
   {
