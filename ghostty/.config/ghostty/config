@@ -1,5 +1,5 @@
 #====================================================================
-# Ghostty 
+# Ghostty
 #====================================================================
 
 # --- Terminal (Compatibility First) ---
@@ -28,7 +28,7 @@ cursor-style = block
 cursor-style-blink = false
 
 # --- Scrollback (balanced memory vs usability) ---
-scrollback-limit = 1000000
+scrollback-limit = 1000000000
 
 # --- Mouse ---
 mouse-hide-while-typing = true
