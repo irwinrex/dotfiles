@@ -6,7 +6,14 @@ return {
       servers = {
         terraformls = {
           root_dir = require("lspconfig.util").root_pattern("terragrunt.hcl", ".terraform", ".git", "main.tf"),
-          on_attach = function(client, bufnr)
+          capabilities = {
+            workspace = {
+              didChangeWatchedFiles = {
+                dynamicRegistration = true,
+              },
+            },
+          },
+          on_attach = function(client)
             client.server_capabilities.documentFormattingProvider = false
             client.server_capabilities.documentRangeFormattingProvider = false
           end,
@@ -17,18 +24,16 @@ return {
               },
             },
             ["terraform-ls"] = {
-              -- Only validate when .terraform dir exists (i.e. after init)
               validation = {
                 enableEnhancedValidation = false,
               },
-              -- Ignore dirs that are clearly not initialized roots
               ignoreSingleFileWarning = true,
             },
           },
         },
       },
       setup = {
-        terraformls = function(_, opts)
+        terraformls = function(_)
           return true
         end,
       },
@@ -43,12 +48,8 @@ return {
       },
       linters = {
         tflint = {
-          -- Disable the built-in terraform validate runner inside tflint.
-          -- "terraform validate" requires `terraform init` and is too noisy
-          -- in monorepos with many uninitialized workspaces.
           args = {
             "--disable-rule=terraform_required_providers",
-            "--no-color",
             "--format=json",
           },
         },
