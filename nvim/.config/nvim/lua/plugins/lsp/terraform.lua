@@ -1,4 +1,5 @@
 -- lua/plugins/terraform.lua
+
 return {
   -- ─── LSP: terraformls ────────────────────────────────────────────────
   {
@@ -6,18 +7,32 @@ return {
     opts = {
       servers = {
         terraformls = {
-          root_dir = require("lspconfig.util").root_pattern("terragrunt.hcl", ".terraform", ".git", "main.tf", "*.tf"),
+          -- Fix 2: monorepo root detection — walks UP until it finds any .tf file dir
+          root_dir = function(fname)
+            local util = require("lspconfig.util")
+            -- Try specific markers first
+            local root = util.root_pattern("terragrunt.hcl", ".terraform", ".terraform.lock.hcl")(fname)
+            if root then
+              return root
+            end
+            -- Fallback: treat the directory containing the .tf file as root
+            -- This handles flat module dirs like shared/
+            return util.root_pattern("*.tf")(fname) or vim.fn.fnamemodify(fname, ":h")
+          end,
+
           capabilities = {
             workspace = {
               didChangeWatchedFiles = {
-                dynamicRegistration = true, -- auto re-index on cross-file changes
+                dynamicRegistration = true,
               },
             },
           },
+
           on_attach = function(client, _)
             client.server_capabilities.documentFormattingProvider = false
             client.server_capabilities.documentRangeFormattingProvider = false
           end,
+
           settings = {
             ["terraform-ls"] = {
               ignoreSingleFileWarning = true,

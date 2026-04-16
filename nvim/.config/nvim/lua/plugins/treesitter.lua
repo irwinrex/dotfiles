@@ -143,13 +143,6 @@ return {
         "helm", -- Helm chart helpers
 
         -- ── DevOps – CI/CD ───────────────────────────────────────────────
-        -- YAML covers GitHub Actions, GitLab CI, CircleCI, Drone, etc.
-        -- Groovy covers Jenkinsfile (listed above)
-
-        -- ── DevOps – Observability (LGTM stack + friends) ─────────────────
-        -- Prometheus / Alertmanager rules → yaml parser
-        -- Loki LogQL            → logfmt / regex parsers below
-        -- Tempo / Jaeger traces → no dedicated parser needed
         "logfmt", -- Loki structured log lines
         "promql", -- Prometheus / Thanos / Cortex queries
         "ql", -- CodeQL (GitHub Advanced Security)
@@ -211,7 +204,10 @@ return {
 
       sync_install = false,
       auto_install = true,
-      highlight = { enable = true },
+      highlight = {
+        enable = true,
+        additional_vim_regex_highlighting = false,
+      },
       indent = { enable = true },
     },
   },
