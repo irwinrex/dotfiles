@@ -9,7 +9,8 @@ return {
         extension = {
           -- Terraform / HCL
           tf = "terraform",
-          tfvars = "terraform-vars",
+          tfvars = "terraform",
+          tfstate = "json",
           hcl = "hcl",
           -- Helm
           gotmpl = "gotmpl",
