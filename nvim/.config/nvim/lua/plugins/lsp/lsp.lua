@@ -5,6 +5,10 @@ return {
   {
     "neovim/nvim-lspconfig",
     opts = {
+      -- Disable semantic tokens globally to prioritize Tree-sitter highlights for performance
+      on_attach = function(client, _)
+        client.server_capabilities.semanticTokensProvider = nil
+      end,
       servers = {
         -- LSP Servers (will be auto-installed via mason-lspconfig)
         gopls = {},

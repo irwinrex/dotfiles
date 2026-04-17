@@ -5,9 +5,20 @@ return {
     opts = {
       servers = {
         gopls = {
+          -- Fix: Better monorepo/submodule root detection
+          root_dir = function(fname)
+            local util = require("lspconfig.util")
+            return util.root_pattern("go.work", "go.mod", ".git")(fname)
+              or util.path.dirname(fname)
+          end,
           settings = {
             gopls = {
               gofumpt = true,
+              usePlaceholders = true,
+              completeUnimported = true,
+              staticcheck = true,
+              directoryFilters = { "-.git", "-node_modules", "-.terraform" },
+              semanticTokens = false, -- Redundant with Tree-sitter
               codelenses = {
                 generate = true,
                 run_govulncheck = true,
@@ -16,20 +27,18 @@ return {
                 upgrade_dependency = true,
               },
               hints = {
-                assignVariableTypes = true,
+                assignVariableTypes = false, -- Often redundant and noisy
                 parameterNames = true,
-                rangeVariableTypes = true,
+                rangeVariableTypes = false,
               },
               analyses = {
-                unusedparams = true,
+                unusedparams = false, -- Too noisy during rapid development
                 shadow = true,
                 nilness = true,
                 unreachable = true,
+                unusedwrite = true,
               },
-              staticcheck = true,
               vulncheck = "Imports",
-              memfs = {},
-              directoryFilters = {},
             },
           },
         },

@@ -7,17 +7,12 @@ return {
     opts = {
       servers = {
         terraformls = {
-          -- Fix 2: monorepo root detection — walks UP until it finds any .tf file dir
+          -- Fix: Improved root detection for monorepos and nested modules
           root_dir = function(fname)
             local util = require("lspconfig.util")
-            -- Try specific markers first
-            local root = util.root_pattern("terragrunt.hcl", ".terraform", ".terraform.lock.hcl")(fname)
-            if root then
-              return root
-            end
-            -- Fallback: treat the directory containing the .tf file as root
-            -- This handles flat module dirs like shared/
-            return util.root_pattern("*.tf")(fname) or vim.fn.fnamemodify(fname, ":h")
+            return util.root_pattern(".terraform", "terragrunt.hcl", ".terraform.lock.hcl", ".git")(fname)
+              or util.root_pattern("main.tf", "variables.tf")(fname) -- Handle module dirs without .git
+              or util.path.dirname(fname)
           end,
 
           capabilities = {
@@ -29,6 +24,7 @@ return {
           },
 
           on_attach = function(client, _)
+            client.server_capabilities.semanticTokensProvider = nil
             client.server_capabilities.documentFormattingProvider = false
             client.server_capabilities.documentRangeFormattingProvider = false
           end,
@@ -36,17 +32,21 @@ return {
           settings = {
             ["terraform-ls"] = {
               ignoreSingleFileWarning = true,
+              -- Reduced noise by disabling enhanced validation (let tflint handle it)
               validation = {
                 enableEnhancedValidation = false,
               },
+              -- Performance: Limit indexing depth and scope
               indexing = {
-                ignorePaths = { ".terraform", "**/.terraform" },
+                maxDirectories = 500,
+                ignorePaths = { ".terraform", "**/.terraform", ".git", "**/node_modules" },
                 ignoreDirectoryNames = { ".terraform", "node_modules", ".git" },
               },
             },
             terraform = {
               experimentalFeatures = {
                 prefillRequiredFields = true,
+                validateOnSave = false, -- Prevent slow UI hangs on save
               },
             },
           },
