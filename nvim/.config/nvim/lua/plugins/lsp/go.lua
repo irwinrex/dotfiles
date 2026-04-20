@@ -5,11 +5,9 @@ return {
     opts = {
       servers = {
         gopls = {
-          -- Fix: Better monorepo/submodule root detection
           root_dir = function(fname)
             local util = require("lspconfig.util")
-            return util.root_pattern("go.work", "go.mod", ".git")(fname)
-              or util.path.dirname(fname)
+            return util.root_pattern("go.work", "go.mod", ".git")(fname) or vim.fs.dirname(fname)
           end,
           settings = {
             gopls = {
@@ -18,7 +16,7 @@ return {
               completeUnimported = true,
               staticcheck = true,
               directoryFilters = { "-.git", "-node_modules", "-.terraform" },
-              semanticTokens = false, -- Redundant with Tree-sitter
+              semanticTokens = false,
               codelenses = {
                 generate = true,
                 run_govulncheck = true,
@@ -27,16 +25,20 @@ return {
                 upgrade_dependency = true,
               },
               hints = {
-                assignVariableTypes = false, -- Often redundant and noisy
-                parameterNames = true,
+                assignVariableTypes = false, -- Prime hates type noise
+                parameterNames = false,
                 rangeVariableTypes = false,
+                compositeLiteralFields = true, -- ADDED: helpful in structs
+                functionTypeParameters = true, -- ADDED: generics clarity
               },
               analyses = {
-                unusedparams = false, -- Too noisy during rapid development
+                unusedparams = true, -- Prime would want this ON
                 shadow = true,
                 nilness = true,
                 unreachable = true,
                 unusedwrite = true,
+                useany = true, -- ADDED: catch interface{} usage
+                fieldalignment = true, -- ADDED: struct memory layout warnings
               },
               vulncheck = "Imports",
             },

@@ -1,4 +1,3 @@
--- Python LSP and tooling
 return {
   {
     "neovim/nvim-lspconfig",
@@ -14,7 +13,7 @@ return {
           root_dir = function(fname)
             local util = require("lspconfig.util")
             return util.root_pattern(".git", "pyproject.toml", "requirements.txt", "setup.py", ".venv", "venv")(fname)
-              or util.path.dirname(fname)
+              or vim.fs.dirname(fname)
           end,
           settings = {
             basedpyright = {
@@ -25,8 +24,8 @@ return {
                 diagnosticMode = "openFilesOnly",
                 diagnosticSeverityOverrides = {
                   reportGeneralTypeIssues = "warning",
-                  reportUnusedImport = "none",
-                  reportUnusedVariable = "none",
+                  -- reportUnusedImport = "none",
+                  -- reportUnusedVariable = "none",
                   reportOptionalMemberAccess = "none",
                 },
               },
@@ -37,3 +36,4 @@ return {
     },
   },
 }
+
