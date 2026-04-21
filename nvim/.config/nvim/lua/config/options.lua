@@ -47,6 +47,9 @@ vim.opt.shortmess:append("c")
 vim.opt.splitright = true
 vim.opt.splitbelow = true
 
+-- LSP
+vim.g.lazyvim_lsp_inlay_hints = false
+
 -- Performance
 vim.opt.lazyredraw = false
 vim.opt.synmaxcol = 240

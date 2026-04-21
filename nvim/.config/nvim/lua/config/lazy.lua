@@ -39,7 +39,7 @@ require("lazy").setup({
       },
     },
     cache = {
-      enabled = true,
+      enabled = false,
     },
   },
   ui = {

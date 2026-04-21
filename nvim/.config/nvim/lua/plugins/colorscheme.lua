@@ -1,20 +1,14 @@
 return {
+  -- Modern Catppuccin configuration following LazyVim Starter practices
   {
     "catppuccin/nvim",
+    lazy = false,
     name = "catppuccin",
     priority = 1000,
     opts = {
-      flavour = "auto",
-      background = {
-        dark = "mocha",
-        light = "latte",
-      },
+      flavour = "mocha",
       transparent_background = true,
-      show_end_of_buffer = false,
       term_colors = true,
-      dim_inactive = {
-        enabled = false,
-      },
       styles = {
         comments = { "italic" },
         conditionals = { "italic" },
@@ -29,51 +23,56 @@ return {
         types = { "bold" },
         operators = {},
       },
-      auto_integrations = false,
       integrations = {
+        aerial = true,
+        alpha = true,
         cmp = true,
-        gitsigns = true,
-        treesitter = true,
-        which_key = true,
-        indent_blankline = { enabled = true },
-        noice = true,
-        snacks = true,
-        neo_tree = true,
-        telescope = { enabled = true },
+        dashboard = true,
         flash = true,
-        trouble = true,
+        gitsigns = true,
+        headlines = true,
+        illuminate = true,
+        indent_blankline = { enabled = true },
+        leap = true,
+        lsp_trouble = true,
+        mason = true,
+        markdown = true,
+        mini = true,
+        native_lsp = {
+          enabled = true,
+          underlines = {
+            errors = { "undercurl" },
+            hints = { "undercurl" },
+            warnings = { "undercurl" },
+            information = { "undercurl" },
+          },
+        },
+        navic = { enabled = true, custom_bg = "lualine" },
+        neotest = true,
+        neotree = false, -- Disabling theme-specific highlights for NeoTree
+        noice = true,
         notify = true,
+        semantic_tokens = true,
+        telescope = true,
+        treesitter = true,
+        treesitter_context = true,
+        which_key = true,
       },
-      custom_highlights = function(colours)
-        return {
-          -- Buffer line
-          TabLineFill = { bg = colours.surface0 },
-          TabLineSel = { bg = colours.mantle },
-          -- Float windows
-          NormalFloat = { bg = colours.surface0 },
-          FloatBorder = { fg = colours.surface0, bg = colours.surface0 },
-          -- Diagnostic
-          DiagnosticError = { fg = colours.red },
-          DiagnosticWarn = { fg = colours.yellow },
-          DiagnosticHint = { fg = colours.sky },
-          DiagnosticInfo = { fg = colours.blue },
-          -- Quickfix
-          qfFileName = { fg = colours.blue },
-          qfLineNr = { fg = colours.overlay1 },
-          -- Cursor
-          Cursor = { bg = colours.fg, fg = colours.base },
-          CursorLineNr = { fg = colours.text, bold = true },
-          -- Misc
-          LineNr = { fg = colours.overlay0 },
-          CursorLine = { bg = colours.surface0 },
-          VertSplit = { fg = colours.surface1, bg = colours.base },
-          StatusLine = { fg = colours.text, bg = colours.surface0 },
-          StatusLineNC = { fg = colours.overlay0, bg = colours.surface0 },
-          WinBar = { fg = colours.overlay0, bg = colours.base },
-          WinBarNC = { fg = colours.overlay1, bg = colours.base },
-        }
-      end,
     },
+    config = function(_, opts)
+      require("catppuccin").setup(opts)
+      vim.cmd.colorscheme("catppuccin")
+      
+      -- Ensure absolute transparency for blur to work
+      -- We only target the background groups to allow terminal blur through
+      local hl_groups = {
+        "Normal", "NormalNC", "NormalFloat", "FloatBorder", 
+        "TelescopeNormal", "TelescopeBorder",
+      }
+      for _, group in ipairs(hl_groups) do
+        vim.api.nvim_set_hl(0, group, { bg = "none" })
+      end
+    end,
   },
   {
     "LazyVim/LazyVim",
