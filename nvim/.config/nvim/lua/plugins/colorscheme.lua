@@ -49,7 +49,7 @@ return {
         },
         navic = { enabled = true, custom_bg = "lualine" },
         neotest = true,
-        neotree = false, -- Disabling theme-specific highlights for NeoTree
+        neotree = true,
         noice = true,
         notify = true,
         semantic_tokens = true,
@@ -62,12 +62,13 @@ return {
     config = function(_, opts)
       require("catppuccin").setup(opts)
       vim.cmd.colorscheme("catppuccin")
-      
-      -- Ensure absolute transparency for blur to work
-      -- We only target the background groups to allow terminal blur through
       local hl_groups = {
-        "Normal", "NormalNC", "NormalFloat", "FloatBorder", 
-        "TelescopeNormal", "TelescopeBorder",
+        "Normal",
+        "NormalNC",
+        "NormalFloat",
+        "FloatBorder",
+        "TelescopeNormal",
+        "TelescopeBorder",
       }
       for _, group in ipairs(hl_groups) do
         vim.api.nvim_set_hl(0, group, { bg = "none" })
