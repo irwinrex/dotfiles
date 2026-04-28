@@ -3,6 +3,15 @@ return {
   {
     "nvim-lua/plenary.nvim",
     lazy = true,
+    init = function()
+      vim.filetype.add({
+        pattern = {
+          ["Dockerfile%..*"] = "dockerfile",
+          ["Dockerfile"] = "dockerfile",
+          [".*[Dd]ockerfile.*"] = "dockerfile",
+        },
+      })
+    end,
   },
   {
     "neovim/nvim-lspconfig",
@@ -22,19 +31,6 @@ return {
           hadolint = {
             ignore = { "DL3008" },
           },
-        },
-      })
-    end,
-  },
-  {
-    "nvim-lua/plenary.nvim",
-    lazy = true,
-    init = function()
-      vim.filetype.add({
-        pattern = {
-          ["Dockerfile%..*"] = "dockerfile",
-          ["Dockerfile"] = "dockerfile",
-          [".*[Dd]ockerfile.*"] = "dockerfile",
         },
       })
     end,

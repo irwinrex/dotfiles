@@ -47,19 +47,4 @@ return {
       },
     },
   },
-  {
-    "olexsmir/gopher.nvim",
-    ft = "go",
-    build = function()
-      vim.cmd.MasonInstall("gomodifytags impl")
-    end,
-    opts = {},
-    keys = {
-      { "<leader>gsj", "<cmd>GoTagAdd json<cr>", desc = "Add JSON tags" },
-      { "<leader>gsy", "<cmd>GoTagAdd yaml<cr>", desc = "Add YAML tags" },
-      { "<leader>gie", "<cmd>GoIfErr<cr>", desc = "Generate if err" },
-      { "<leader>got", "<cmd>GoTest<cr>", desc = "Run tests" },
-      { "<leader>gof", "<cmd>GoFmt<cr>", desc = "Format code" },
-    },
-  },
-}
+  }
