@@ -199,7 +199,6 @@ return {
         "cue", -- CUE lang (k8s config validation)
         "passwd",
         "pem", -- TLS certs
-        "comment", -- highlights TODO/FIXME/HACK across all languages
       },
 
       sync_install = false,

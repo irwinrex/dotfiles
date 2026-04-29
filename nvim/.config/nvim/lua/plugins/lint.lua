@@ -9,7 +9,6 @@ return {
       javascript = { "eslint_d" },
       typescript = { "eslint_d" },
       json = { "jsonlint" },
-      yaml = { "yamllint" },
       markdown = { "markdownlint" },
       dockerfile = { "hadolint" },
       sh = { "shellcheck" },
@@ -22,3 +21,4 @@ return {
     })
   end,
 }
+
