@@ -8,8 +8,6 @@ return {
       python = { "ruff" },
       javascript = { "eslint_d" },
       typescript = { "eslint_d" },
-      json = { "jsonlint" },
-      markdown = { "markdownlint" },
       dockerfile = { "hadolint" },
       sh = { "shellcheck" },
       bash = { "shellcheck" },
@@ -21,4 +19,3 @@ return {
     })
   end,
 }
-
