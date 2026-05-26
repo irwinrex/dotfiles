@@ -61,17 +61,39 @@ return {
     config = function(_, opts)
       require("catppuccin").setup(opts)
       vim.cmd.colorscheme("catppuccin")
-      local hl_groups = {
-        "Normal",
-        "NormalNC",
-        "NormalFloat",
-        "FloatBorder",
-        "TelescopeNormal",
-        "TelescopeBorder",
+      
+      -- Selective transparency: keep backgrounds for UI elements that need contrast
+      local transparent_groups = {
+        "Normal",           -- Main editor background
+        "NormalNC",         -- Non-focused windows
+        "SignColumn",       -- Git signs column
+        "LineNr",           -- Line numbers
+        "Folded",           -- Folded lines
+        "EndOfBuffer",      -- ~ lines at end
+        "VertSplit",        -- Vertical split
       }
-      for _, group in ipairs(hl_groups) do
+      
+      -- Apply transparency only to selected groups
+      for _, group in ipairs(transparent_groups) do
         vim.api.nvim_set_hl(0, group, { bg = "none" })
       end
+      
+       -- Enhance Visual mode for better visibility on transparent background
+       vim.api.nvim_set_hl(0, "Visual", {
+         bg = "#45475a",    -- Catppuccin mocha surface0 with good contrast
+         fg = "NONE",       -- Preserve syntax highlighting
+       })
+      
+      -- Improve visibility of key syntax elements on transparent background
+      local hl = vim.api.nvim_set_hl
+      hl(0, "Comment", { fg = "#6c7086", italic = true })    -- Brighter comments
+      hl(0, "String", { fg = "#f5a97f" })                    -- Warm strings
+      hl(0, "Function", { fg = "#89b4fa", bold = true })     -- Clear functions
+      hl(0, "Keyword", { fg = "#f38ba8", italic = true })    -- Distinct keywords
+      hl(0, "Type", { fg = "#a6e3a1", bold = true })         -- Visible types
+      hl(0, "Constant", { fg = "#f9e2af" })                  -- Readable constants
+      hl(0, "Identifier", { fg = "#cdd6f4" })                -- Clear variables
+      hl(0, "Statement", { fg = "#f38ba8" })                 -- Better statements
     end,
   },
   {
