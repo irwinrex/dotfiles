@@ -66,6 +66,7 @@ return {
       local transparent_groups = {
         "Normal",           -- Main editor background
         "NormalNC",         -- Non-focused windows
+        "NormalFloat",      -- Floating windows (snacks picker/explorer)
         "SignColumn",       -- Git signs column
         "LineNr",           -- Line numbers
         "Folded",           -- Folded lines
