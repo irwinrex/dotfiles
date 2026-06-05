@@ -5,6 +5,13 @@ return {
     lazy = false,
     priority = 1000,
     opts = {
+      picker = {
+        sources = {
+          explorer = {
+            include = { ".gitignore" },
+          },
+        },
+      },
       dashboard = {
         enabled = true,
         preset = {

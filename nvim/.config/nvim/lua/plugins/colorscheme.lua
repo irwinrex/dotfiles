@@ -26,7 +26,7 @@ return {
       integrations = {
         aerial = true,
         alpha = true,
-        cmp = true,
+        blink_cmp = true,
         dashboard = true,
         flash = true,
         gitsigns = true,
@@ -52,6 +52,7 @@ return {
         noice = true,
         notify = true,
         semantic_tokens = true,
+        snacks = true,
         telescope = true,
         treesitter = true,
         treesitter_context = true,
@@ -64,29 +65,47 @@ return {
       
       -- Selective transparency: keep backgrounds for UI elements that need contrast
       local transparent_groups = {
-        "Normal",           -- Main editor background
-        "NormalNC",         -- Non-focused windows
-        "NormalFloat",      -- Floating windows (snacks picker/explorer)
-        "SignColumn",       -- Git signs column
-        "LineNr",           -- Line numbers
-        "Folded",           -- Folded lines
-        "EndOfBuffer",      -- ~ lines at end
-        "VertSplit",        -- Vertical split
+        "Normal",              -- Main editor background
+        "NormalNC",            -- Non-focused windows
+        "NormalFloat",         -- Floating windows (snacks picker/explorer)
+        "FloatBorder",         -- Floating window borders
+        "SignColumn",          -- Git signs column
+        "LineNr",              -- Line numbers
+        "CursorLineNr",        -- Active line number
+        "Folded",              -- Folded lines
+        "EndOfBuffer",         -- ~ lines at end
+        "VertSplit",           -- Vertical split
+        "Pmenu",               -- Completion menu
+        "PmenuSel",            -- Selected completion item
+        "WhichKeyFloat",       -- Which-key popup
+        "WhichKeyBorder",      -- Which-key border
+        "BlinkCmpDoc",         -- Blink documentation window
+        "BlinkCmpDocBorder",   -- Blink documentation border
+        "LazyNormal",          -- Lazy.nvim UI
+        "LazyFloat",           -- Lazy.nvim floating window
+        "MasonNormal",         -- Mason window
+        "NoicePopup",          -- Noice popup
+        "NoiceCmdlinePopup",   -- Noice cmdline popup
+        "NotifyBackground",    -- Notify background
       }
-      
+
       -- Apply transparency only to selected groups
       for _, group in ipairs(transparent_groups) do
-        vim.api.nvim_set_hl(0, group, { bg = "none" })
+        local ok, _ = pcall(vim.api.nvim_set_hl, 0, group, { bg = "none" })
       end
       
-       -- Enhance Visual mode for better visibility on transparent background
+       -- Enhance selection/UI visibility on transparent background
        vim.api.nvim_set_hl(0, "Visual", {
-         bg = "#45475a",    -- Catppuccin mocha surface0 with good contrast
-         fg = "NONE",       -- Preserve syntax highlighting
+         bg = "#45475a",
+         fg = "NONE",
+       })
+       vim.api.nvim_set_hl(0, "VisualNOS", {
+         bg = "#45475a",
+         fg = "NONE",
        })
       
-      -- Improve visibility of key syntax elements on transparent background
-      local hl = vim.api.nvim_set_hl
+       -- Improve visibility of key syntax elements on transparent background
+       local hl = vim.api.nvim_set_hl
       hl(0, "Comment", { fg = "#6c7086", italic = true })    -- Brighter comments
       hl(0, "String", { fg = "#f5a97f" })                    -- Warm strings
       hl(0, "Function", { fg = "#89b4fa", bold = true })     -- Clear functions
