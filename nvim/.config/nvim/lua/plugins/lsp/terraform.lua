@@ -24,16 +24,5 @@ return {
         },
       },
     },
-    init = function()
-      vim.api.nvim_create_autocmd({ "InsertLeave", "TextChanged" }, {
-        group = vim.api.nvim_create_augroup("terraform_autosave", { clear = true }),
-        pattern = { "*.tf", "*.tfvars" },
-        callback = function()
-          if vim.bo.modified and vim.bo.modifiable and vim.bo.buftype == "" then
-            vim.cmd("silent! write")
-          end
-        end,
-      })
-    end,
   },
 }
