@@ -2,6 +2,7 @@
 return {
   {
     "neovim/nvim-lspconfig",
+    ft = { "c", "cpp", "objc", "objcpp" },
     opts = {
       servers = {
         clangd = {

@@ -19,10 +19,10 @@ require("lazy").setup({
     { "LazyVim/LazyVim", import = "lazyvim.plugins" },
     { import = "plugins" },
   },
-  defaults = {
-    lazy = false,
-    version = false,
-  },
+  -- defaults = {
+  --   lazy = false,
+  --   version = false,
+  -- },
   install = { colorscheme = { "catppuccin" } },
   checker = {
     enabled = true,
@@ -39,7 +39,7 @@ require("lazy").setup({
       },
     },
     cache = {
-      enabled = false,
+      enabled = true,
     },
   },
   ui = {

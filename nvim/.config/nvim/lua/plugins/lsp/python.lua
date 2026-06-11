@@ -1,6 +1,7 @@
 return {
   {
     "neovim/nvim-lspconfig",
+    ft = { "python" },
     opts = {
       servers = {
         ruff = {

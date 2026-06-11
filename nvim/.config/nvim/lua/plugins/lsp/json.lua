@@ -2,6 +2,7 @@
 return {
   {
     "neovim/nvim-lspconfig",
+    ft = { "json", "jsonc" },
     opts = {
       servers = {
         jsonls = {

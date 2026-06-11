@@ -3,9 +3,57 @@
 working_directory = "None"
 live_config_reload = true
 ipc_socket = true
-import = [
-  "~/.config/alacritty/themes/catppuccin-mocha.toml",
-]
+[colors.normal]
+black = "#45475a"
+red = "#f38ba8"
+green = "#a6e3a1"
+yellow = "#f9e2af"
+blue = "#89b4fa"
+magenta = "#f5c2e7"
+cyan = "#94e2d5"
+white = "#bac2de"
+
+[colors.bright]
+black = "#585b70"
+red = "#f38ba8"
+green = "#a6e3a1"
+yellow = "#f9e2af"
+blue = "#89b4fa"
+magenta = "#f5c2e7"
+cyan = "#94e2d5"
+white = "#a6adc8"
+
+[colors.cursor]
+cursor = "#f5e0dc"
+text = "#1e1e2e"
+
+[colors.vi_mode_cursor]
+cursor = "#b4befe"
+text = "#1e1e2e"
+
+[colors.selection]
+background = "#585b70"
+text = "#cdd6f4"
+
+[colors.search]
+matches = { foreground = "#1e1e2e", background = "#a6adc8" }
+focused_match = { foreground = "#1e1e2e", background = "#a6e3a1" }
+
+[colors.footer_bar]
+background = "#313244"
+foreground = "#cdd6f4"
+
+[colors.hints]
+start = { foreground = "#1e1e2e", background = "#f9e2af" }
+end = { foreground = "#1e1e2e", background = "#f9e2af" }
+
+[colors.line_indicator]
+foreground = "#89b4fa"
+background = "#1e1e2e"
+
+[colors.primary]
+background = "#11111b"
+foreground = "#cdd6f4"
 
 [env]
 TERM = "alacritty"
@@ -19,7 +67,7 @@ dynamic_padding = true
 dynamic_title = true
 padding = { x = 8, y = 8 }
 startup_mode = "Windowed"
-resize_increments = true
+resize_increments = false
 option_as_alt = "OnlyLeft"
 
 [font]
@@ -39,25 +87,32 @@ osc52 = "CopyPaste"
 save_to_clipboard = true
 semantic_escape_chars = ",│`|:\"' ()[]{}<>\t"
 
+[keyboard]
+bindings = [
+  { key = "Space", mods = "Command|Shift", action = "ToggleViMode" },
+  { key = "F", mods = "Command|Shift", action = "SearchBackward" },
+  { key = "Return", mods = "Command|Control", action = "ToggleFullscreen" },
+]
+
 [cursor]
 style = { shape = "Block", blinking = "On" }
 vi_mode_style = { shape = "Beam", blinking = "On" }
 blink_interval = 750
 blink_timeout = 5
 unfocused_hollow = true
-thickness = 0.15
 
 [mouse]
 hide_when_typing = true
+bindings = [
+  { mouse = "Right", action = "PasteSelection" },
+]
 
 [scrolling]
 history = 10000
 multiplier = 3
 
 [bell]
-animation = "EaseOutExpo"
-duration = 100
-color = "#ffffff"
+duration = 0
 
 [colors]
 draw_bold_text_with_bright_colors = true
@@ -77,7 +132,6 @@ action = "Select"
 hyperlinks = true
 post_processing = true
 persist = false
-mouse = { enabled = true }
 binding = { key = "I", mods = "Control|Shift" }
 regex = "(ipfs:|ipns:|magnet:|mailto:|gemini://|gopher://|https://|http://|news:|file:|git://|ssh:|ftp://)[^\\u0000-\\u001F\\u007F-\\u009F<>\"\\s{-}\\\\^⟨⟩`\\\\]+"
 
@@ -86,7 +140,6 @@ action = "MoveViModeCursor"
 hyperlinks = true
 post_processing = true
 persist = false
-mouse = { enabled = true }
 binding = { key = "O", mods = "Control|Shift" }
 regex = "(ipfs:|ipns:|magnet:|mailto:|gemini://|gopher://|https://|http://|news:|file:|git://|ssh:|ftp://)[^\\u0000-\\u001F\\u007F-\\u009F<>\"\\s{-}\\\\^⟨⟩`\\\\]+"
 
