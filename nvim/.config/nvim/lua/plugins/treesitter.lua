@@ -3,7 +3,7 @@ return {
   {
     "nvim-treesitter/nvim-treesitter",
     build = ":TSUpdate",
-    event = "VeryLazy",
+    event = { "BufReadPost", "BufNewFile" },
     init = function()
       vim.filetype.add({
         extension = {
@@ -72,13 +72,11 @@ return {
 
         -- ── .NET / Microsoft ────────────────────────────────────────────
         "c_sharp",
-        "bicep", -- Azure Bicep IaC
 
         -- ── Scripting ───────────────────────────────────────────────────
         "python",
         "ruby",
         "perl",
-        "lua",
         "r",
         "elixir",
         "erlang",
@@ -136,7 +134,6 @@ return {
         -- ── DevOps – IaC ─────────────────────────────────────────────────
         "terraform", -- .tf files
         "hcl", -- Terragrunt / Packer raw HCL
-        "bicep", -- Azure Bicep (also listed under .NET)
 
         -- ── DevOps – Containers & Orchestration ──────────────────────────
         "dockerfile",
@@ -197,7 +194,6 @@ return {
         "nix",
         "jsonnet",
         "cue", -- CUE lang (k8s config validation)
-        "passwd",
         "pem", -- TLS certs
       },
 
@@ -205,7 +201,7 @@ return {
       auto_install = true,
       highlight = {
         enable = true,
-        additional_vim_regex_highlighting = false,
+        additional_vim_regex_highlighting = true,
       },
       indent = { enable = true },
     },

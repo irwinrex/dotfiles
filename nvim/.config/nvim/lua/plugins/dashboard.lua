@@ -6,6 +6,8 @@ return {
     priority = 1000,
     opts = {
       picker = {
+        hidden = true,
+        ignored = true,
         sources = {
           explorer = {
             include = { ".gitignore" },

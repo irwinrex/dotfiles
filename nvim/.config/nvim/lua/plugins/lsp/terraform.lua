@@ -5,7 +5,7 @@ return {
     opts = {
       servers = {
         terraformls = {
-          on_attach = function(client)
+          on_init = function(client)
             client.server_capabilities.semanticTokensProvider = nil
           end,
           handlers = {

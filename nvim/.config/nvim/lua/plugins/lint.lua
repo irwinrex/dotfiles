@@ -4,7 +4,6 @@ return {
   config = function()
     local lint = require("lint")
     lint.linters_by_ft = {
-      go = { "golangci-lint" },
       python = { "ruff" },
       javascript = { "eslint_d" },
       typescript = { "eslint_d" },
