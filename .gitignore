@@ -1,3 +1,7 @@
 *.log
+*.zwc
+.zcompdump
+local.zsh
+plugins/
 tpm
 lazy-lock.json
