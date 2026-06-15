@@ -7,18 +7,31 @@ require("core.options")
 require("core.keymaps")
 require("core.autocmds")
 
--- LSP
-require("lsp")
+-- Bootstrap lazy.nvim
+local lazypath = data_path .. "/lazy/lazy.nvim"
+if not vim.uv.fs_stat(lazypath) then
+  vim.fn.system({
+    "git",
+    "clone",
+    "--filter=blob:none",
+    "https://github.com/folke/lazy.nvim.git",
+    "--branch=stable",
+    lazypath,
+  })
+end
+vim.opt.rtp:prepend(lazypath)
 
--- Plugins
-require("plugins.treesitter")
-require("plugins.blink")
-require("plugins.conform")
-require("plugins.gitsigns")
-require("plugins.telescope")
-require("plugins.flash")
+require("lazy").setup({
+  spec = { { import = "plugins" } },
+  defaults = { lazy = true },
+  install = { colorscheme = { "catppuccin" } },
+  ui = { border = "rounded" },
+})
+
+-- LSP (needs blink.cmp from plugins — loaded via lazy=false)
+require("lsp")
 
 -- UI
 require("ui.statusline")
 
-vim.cmd.colorscheme("habamax")
+vim.cmd.colorscheme("catppuccin")
