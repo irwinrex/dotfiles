@@ -228,6 +228,26 @@ run_stow() {
   fi
 }
 
+run_stow_neovim() {
+  info "Setting up neovim0.12 config symlinks..."
+
+  if [[ -L "$HOME/.config/nvim0.12" ]]; then
+    rm -f "$HOME/.config/nvim0.12"
+  elif [[ -d "$HOME/.config/nvim0.12" ]]; then
+    warn "Backing up existing ~/.config/nvim0.12 → ~/.config/nvim0.12.backup"
+    mv "$HOME/.config/nvim0.12" "$HOME/.config/nvim0.12.backup"
+  fi
+
+  cd "$DOTFILES_DIR" && stow neovim0.12
+
+  if [[ -L "$HOME/.config/nvim0.12" ]]; then
+    ok "neovim0.12 config symlinks created"
+  else
+    err "Stow may not have worked correctly"
+    err "Run manually: cd ~/dotfiles && stow -v neovim0.12"
+  fi
+}
+
 create_dirs() {
   mkdir -p "$HOME/.local/state/zsh"
   mkdir -p "$HOME/.cache/zsh"
@@ -299,6 +319,7 @@ main() {
   ensure_stow
   create_dirs
   run_stow
+  run_stow_neovim
   echo ""
   set_default_shell
   echo ""
@@ -311,6 +332,7 @@ main() {
   info "  1. Restart your terminal or run: exec zsh"
   info "  2. First startup will clone plugins (may take a few seconds)"
   info "  3. Update plugins later with: zplugin-update"
+  info "  4. Launch Neovim 0.12 with: v0"
   echo ""
   ok "Happy hacking!"
 }

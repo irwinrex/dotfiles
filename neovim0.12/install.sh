@@ -2,16 +2,12 @@
 set -euo pipefail
 
 DOTFILES_DIR="$(cd "$(dirname "$0")" && pwd)"
-
-# ── Config paths ────────────────────────────────────────────────────────────
-CONFIG_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/nvim0.12"
 PLUGIN_DIR="${XDG_DATA_HOME:-$HOME/.local/share}/nvim0.12/site/pack/default/start"
 AUTOLOAD_DIR="${XDG_DATA_HOME:-$HOME/.local/share}/nvim0.12/site/autoload"
 
-# ── Symlink config ──────────────────────────────────────────────────────────
-echo "→ Creating config symlink: $CONFIG_DIR"
-mkdir -p "$(dirname "$CONFIG_DIR")"
-ln -sfn "$DOTFILES_DIR/.config/nvim0.12" "$CONFIG_DIR"
+# ── Stow config ─────────────────────────────────────────────────────────────
+echo "→ Stowing neovim0.12 config ..."
+cd "$DOTFILES_DIR/.." && stow neovim0.12
 
 # ── Clone plugins ──────────────────────────────────────────────────────────
 clone_plugin() {
