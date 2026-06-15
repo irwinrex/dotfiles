@@ -38,3 +38,5 @@ vim.opt.lazyredraw = false
 vim.opt.synmaxcol = 240
 
 vim.opt.termguicolors = true
+
+vim.opt.winblend = 10
