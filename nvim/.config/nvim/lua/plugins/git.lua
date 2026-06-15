@@ -1,19 +1,15 @@
--- Git integration
 return {
   {
     "lewis6991/gitsigns.nvim",
     event = { "BufReadPre", "BufNewFile" },
     opts = {
       signs = {
-        add = { text = "+" },
-        change = { text = "~" },
+        add = { text = "│" },
+        change = { text = "│" },
         delete = { text = "_" },
         topdelete = { text = "‾" },
         changedelete = { text = "~" },
       },
-      signcolumn = true,
-      numhl = false,
-      linehl = false,
       current_line_blame = true,
       current_line_blame_opts = {
         virt_text = true,
@@ -29,8 +25,8 @@ return {
 
         map("n", "]h", gs.next_hunk, "Next Hunk")
         map("n", "[h", gs.prev_hunk, "Prev Hunk")
-        map({ "n", "v" }, "<leader>ghs", ":Gitsigns stage_hunk<CR>", "Stage Hunk")
-        map({ "n", "v" }, "<leader>ghr", ":Gitsigns reset_hunk<CR>", "Reset Hunk")
+        map({ "n", "v" }, "<leader>ghs", gs.stage_hunk, "Stage Hunk")
+        map({ "n", "v" }, "<leader>ghr", gs.reset_hunk, "Reset Hunk")
         map("n", "<leader>ghS", gs.stage_buffer, "Stage Buffer")
         map("n", "<leader>ghu", gs.undo_stage_hunk, "Undo Stage Hunk")
         map("n", "<leader>ghR", gs.reset_buffer, "Reset Buffer")
@@ -42,14 +38,9 @@ return {
         map("n", "<leader>ghD", function()
           gs.diffthis("~")
         end, "Diff This ~")
+        map("n", "<leader>ght", gs.toggle_signs, "Toggle Signs")
+        map("n", "<leader>ghT", gs.toggle_current_line_blame, "Toggle Blame")
       end,
-    },
-  },
-  {
-    "kdheepak/lazygit.nvim",
-    cmd = "LazyGit",
-    keys = {
-      { "<leader>gg", "<cmd>LazyGitCurrentFile<cr>", desc = "LazyGit" },
     },
   },
   {
