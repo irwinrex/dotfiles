@@ -1,3 +1,4 @@
+require("lsp.terraform")
 require("lsp.lua")
 require("lsp.go")
 require("lsp.python")

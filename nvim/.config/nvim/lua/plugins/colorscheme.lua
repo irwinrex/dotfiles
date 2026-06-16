@@ -26,6 +26,7 @@ return {
       integrations = {
         aerial = true,
         alpha = true,
+        bufferline = true,
         blink_cmp = true,
         dashboard = true,
         flash = true,
@@ -62,7 +63,7 @@ return {
     config = function(_, opts)
       require("catppuccin").setup(opts)
       vim.cmd.colorscheme("catppuccin")
-      
+
       -- Selective transparency: keep backgrounds for UI elements that need contrast
       local transparent_groups = {
         "Normal",              -- Main editor background
@@ -93,7 +94,7 @@ return {
       for _, group in ipairs(transparent_groups) do
         local ok, _ = pcall(vim.api.nvim_set_hl, 0, group, { bg = "none" })
       end
-      
+
        -- Enhance selection/UI visibility on transparent background
        vim.api.nvim_set_hl(0, "Visual", {
          bg = "#45475a",
@@ -103,7 +104,7 @@ return {
          bg = "#45475a",
          fg = "NONE",
        })
-      
+
        -- Improve visibility of key syntax elements on transparent background
        local hl = vim.api.nvim_set_hl
       hl(0, "Comment", { fg = "#6c7086", italic = true })    -- Brighter comments
@@ -114,12 +115,41 @@ return {
       hl(0, "Constant", { fg = "#f9e2af" })                  -- Readable constants
       hl(0, "Identifier", { fg = "#cdd6f4" })                -- Clear variables
       hl(0, "Statement", { fg = "#f38ba8" })                 -- Better statements
+
+      -- Re-apply transparency to Snacks windows after all plugins load
+      vim.api.nvim_create_autocmd("UIEnter", {
+        once = true,
+        callback = function()
+          local snacks_groups = {
+            "SnacksNormal",
+            "SnacksNormalNC",
+            "SnacksBackdrop",
+            "SnacksTerminal",
+            "SnacksTerminalBorder",
+            "SnacksPicker",
+            "SnacksPickerBorder",
+            "SnacksExplorer",
+            "SnacksExplorerBorder",
+            "SnacksInput",
+            "SnacksInputBorder",
+            "SnacksScratch",
+            "SnacksScratchBorder",
+            "SnacksTitle",
+            "SnacksFooter",
+            "SnacksWinBar",
+            "SnacksWinBarNC",
+            "SnacksWinSeparator",
+            "SnacksWinKey",
+            "SnacksWinKeySep",
+            "SnacksWinKeyDesc",
+            "SnacksFooterDesc",
+            "SnacksFooterKey",
+          }
+          for _, group in ipairs(snacks_groups) do
+            pcall(vim.api.nvim_set_hl, 0, group, { bg = "none" })
+          end
+        end,
+      })
     end,
-  },
-  {
-    "LazyVim/LazyVim",
-    opts = {
-      colorscheme = "catppuccin",
-    },
   },
 }
