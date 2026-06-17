@@ -248,6 +248,26 @@ run_stow_nvim() {
   fi
 }
 
+run_stow_lazygit() {
+  info "Setting up lazygit config symlinks..."
+
+  if [[ -L "$HOME/.config/lazygit" ]]; then
+    rm -f "$HOME/.config/lazygit"
+  elif [[ -d "$HOME/.config/lazygit" ]]; then
+    warn "Backing up existing ~/.config/lazygit → ~/.config/lazygit.backup"
+    mv "$HOME/.config/lazygit" "$HOME/.config/lazygit.backup"
+  fi
+
+  cd "$DOTFILES_DIR" && stow lazygit
+
+  if [[ -L "$HOME/.config/lazygit" ]]; then
+    ok "lazygit config symlinks created"
+  else
+    err "Stow may not have worked correctly"
+    err "Run manually: cd ~/dotfiles && stow -v lazygit"
+  fi
+}
+
 create_dirs() {
   mkdir -p "$HOME/.local/state/zsh"
   mkdir -p "$HOME/.cache/zsh"
@@ -275,6 +295,7 @@ main() {
       install_pkg starship
       install_pkg ripgrep rg
       install_pkg fd
+      install_pkg lazygit
       ;;
     arch)
       info "Installing packages via pacman..."
@@ -287,6 +308,7 @@ main() {
       install_pkg zoxide
       install_pkg starship
       install_pkg ripgrep
+      install_pkg lazygit
       ;;
     fedora)
       info "Installing packages via dnf..."
@@ -299,6 +321,7 @@ main() {
       install_pkg zoxide
       install_pkg starship
       install_pkg ripgrep
+      install_pkg lazygit
       ;;
     debian)
       info "Installing packages via apt..."
@@ -309,6 +332,7 @@ main() {
       install_pkg fd-find fd
       install_pkg fzf
       install_pkg ripgrep
+      install_pkg lazygit
       install_curl_sh "https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh" zoxide
       install_curl_sh "https://starship.rs/install.sh" starship
       fix_debian_bins
@@ -320,6 +344,7 @@ main() {
   create_dirs
   run_stow
   run_stow_nvim
+  run_stow_lazygit
   echo ""
   set_default_shell
   echo ""

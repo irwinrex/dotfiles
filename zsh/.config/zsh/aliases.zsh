@@ -29,6 +29,12 @@ alias conf='cd ~/.config'
 alias p='cd ~/Documents/projects'
 alias -- -='cd -'
 
+# =========================================================
+# TMUX
+# =========================================================
+alias t='tmux attach -t'
+
+
 lf() {
   local tmp
   tmp=$(mktemp)

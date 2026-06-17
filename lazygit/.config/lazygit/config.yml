@@ -1,0 +1,50 @@
+gui:
+  border: rounded
+  showBottomLine: false
+  showPanelJumps: true
+  nerdFontsVersion: "3"
+  language: en
+  theme:
+    activeBorderColor:
+      - "#89b4fa"
+      - bold
+    inactiveBorderColor:
+      - "#a6adc8"
+    searchingActiveBorderColor:
+      - "#89b4fa"
+      - bold
+    optionsTextColor:
+      - "#89b4fa"
+    selectedLineBgColor:
+      - "#313244"
+    cherryPickedCommitBgColor:
+      - "#45475a"
+    cherryPickedCommitFgColor:
+      - "#89b4fa"
+    unstagedChangesColor:
+      - "#f38ba8"
+    defaultFgColor:
+      - "#cdd6f4"
+
+git:
+  paging:
+    colorArg: always
+    pager: delta --dark --paging=never
+  commit:
+    signOff: false
+  merging:
+    args: --no-ff
+  pull:
+    mode: rebase
+
+os:
+  editPreset: nvim
+
+keybinding:
+  universal:
+    quit: q
+    quit-alt1: <c-q>
+    togglePanel: <tab>
+    toggleRangeSelectInto: <space>
+    undo: z
+    redo: <c-z>
