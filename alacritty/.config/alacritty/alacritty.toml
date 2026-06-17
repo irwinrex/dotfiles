@@ -59,7 +59,7 @@ foreground = "#cdd6f4"
 TERM = "xterm-256color"
 
 [window]
-opacity = 0.88
+opacity = 0.85
 blur = true
 decorations = "Full"
 decorations_theme_variant = "Dark"
@@ -77,7 +77,7 @@ bold = { family = "JetBrainsMono Nerd Font", style = "Bold" }
 italic = { family = "JetBrainsMono Nerd Font", style = "Italic" }
 bold_italic = { family = "JetBrainsMono Nerd Font", style = "Bold Italic" }
 offset = { x = 0, y = 0 }
-builtin_box_drawing = true
+
 
 [terminal]
 shell = { program = "/bin/zsh", args = ["-l"] }
@@ -127,8 +127,6 @@ multiplier = 3
 duration = 0
 
 [colors]
-draw_bold_text_with_bright_colors = true
-transparent_background_colors = false
 
 [[hints.enabled]]
 action = "Copy"
