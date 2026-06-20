@@ -35,7 +35,7 @@ return {
         illuminate = true,
         indent_blankline = { enabled = true },
         leap = true,
-        lsp_trouble = true,
+
         mason = true,
         markdown = true,
         mini = true,
@@ -50,7 +50,6 @@ return {
         },
         navic = { enabled = true, custom_bg = "lualine" },
         neotest = true,
-        noice = true,
         notify = true,
         semantic_tokens = true,
         snacks = true,
@@ -85,8 +84,6 @@ return {
         "LazyNormal",          -- Lazy.nvim UI
         "LazyFloat",           -- Lazy.nvim floating window
         "MasonNormal",         -- Mason window
-        "NoicePopup",          -- Noice popup
-        "NoiceCmdlinePopup",   -- Noice cmdline popup
         "NotifyBackground",    -- Notify background
       }
 

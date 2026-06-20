@@ -66,3 +66,10 @@ map("n", "<leader>e", function() Snacks.explorer() end, opts)
 map("n", "[d", function() vim.diagnostic.jump({ count = -1 }) end, opts)
 map("n", "]d", function() vim.diagnostic.jump({ count = 1 }) end, opts)
 map("n", "<leader>d", vim.diagnostic.open_float, opts)
+map("n", "gy", function()
+  local diags = vim.diagnostic.get(0, { lnum = vim.fn.line(".") - 1 })
+  if #diags > 0 then
+    vim.fn.setreg("+", diags[1].message)
+    vim.notify("Diagnostic copied", vim.log.levels.INFO)
+  end
+end, { desc = "Yank diagnostic at cursor" })

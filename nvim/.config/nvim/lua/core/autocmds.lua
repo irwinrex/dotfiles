@@ -10,18 +10,6 @@ autocmd("TextYankPost", {
   end,
 })
 
--- Strip trailing whitespace on save
-augroup("StripTrailingWhitespace", { clear = true })
-autocmd("BufWritePre", {
-  group = "StripTrailingWhitespace",
-  pattern = "*",
-  callback = function()
-    local save = vim.fn.winsaveview()
-    vim.cmd([[%s/\s\+$//e]])
-    vim.fn.winrestview(save)
-  end,
-})
-
 -- Auto-resize splits on window resize
 augroup("AutoResize", { clear = true })
 autocmd("VimResized", {
@@ -47,4 +35,13 @@ autocmd("FileType", {
   group = "SpellCheck",
   pattern = { "gitcommit", "markdown", "text" },
   command = "setlocal spell",
+})
+
+-- Terraform filetype detection
+vim.filetype.add({
+  extension = {
+    tf = "terraform",
+    tfvars = "terraform",
+    hcl = "hcl",
+  },
 })

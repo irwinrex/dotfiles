@@ -1,7 +1,7 @@
-require("lsp.terraform")
-require("lsp.lua")
-require("lsp.go")
-require("lsp.python")
-require("lsp.rust")
-require("lsp.cpp")
+require("lsp.lang.terraform")
+require("lsp.lang.lua")
+require("lsp.lang.go")
+require("lsp.lang.python")
+require("lsp.lang.json")
+require("lsp.lang.yaml")
 

@@ -3,12 +3,10 @@ vim.lsp.config("gopls", {
     gopls = {
       analyses = {
         unusedparams = true,
-        shadow = true,
         nilness = true,
         unreachable = true,
         unusedwrite = true,
         useany = true,
-        fieldalignment = true,
       },
       staticcheck = true,
       gofumpt = true,
