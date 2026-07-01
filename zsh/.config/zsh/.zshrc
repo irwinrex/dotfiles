@@ -81,4 +81,4 @@ source "$ZSH_CONFIG_DIR/prompt.zsh"
 # Path
 # =========================================================
 
-export PATH="$HOME/.local/bin:$PATH"
+export PATH="$HOME/.local/bin:$HOME/go/bin:$PATH"

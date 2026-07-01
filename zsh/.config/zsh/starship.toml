@@ -11,6 +11,7 @@ format = "$os$username$hostname$directory$git_branch$git_status$status $characte
 right_format = "$kubernetes$aws$terraform$docker_context $golang$python$nodejs"
 
 add_newline = false
+command_timeout = 1000
 
 
 # =========================
