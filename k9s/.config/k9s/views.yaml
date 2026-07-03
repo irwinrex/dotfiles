@@ -7,3 +7,4 @@ views:
       - ROLE
       - VERSION
       - INSTANCE-TYPE:.metadata.labels.node\.kubernetes\.io/instance-type
+      - NODEGROUP:.metadata.labels.eks\.amazonaws\.com/nodegroup
