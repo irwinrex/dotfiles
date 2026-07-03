@@ -1,0 +1,12 @@
+k9s:
+  refreshRate: 2
+  readOnly: false
+  ui:
+    enableMouse: true
+    headless: false
+    logoless: false
+    crumbsless: false
+    noIcons: false
+    skin: catppuccin-mocha
+  skipLatestRevCheck: false
+  disablePodCounting: false

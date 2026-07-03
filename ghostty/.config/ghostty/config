@@ -9,7 +9,7 @@ term = xterm-256color
 font-family = JetBrains Mono
 font-family = Symbols Nerd Font
 font-style = Regular
-font-size = 15
+font-size = 16
 font-thicken = false
 
 # --- Theme (1.2+ format requires quotes for spaces) ---

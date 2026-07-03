@@ -5,3 +5,5 @@ local.zsh
 plugins/
 tpm
 .DS_Store
+k9s/.config/k9s/clusters/
+k9s/.config/k9s/k9s.log
