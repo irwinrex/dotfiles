@@ -1,0 +1,56 @@
+# Alacritty Configuration
+
+[general]
+import = ["~/.config/alacritty/catppuccin-mocha.toml"]
+
+[env]
+TERM = "xterm-256color"
+
+[font]
+size = 16
+normal = { family = "JetBrainsMono Nerd Font", style = "Regular" }
+
+[window]
+decorations = "Full"
+padding = { x = 12, y = 12 }
+opacity = 0.8
+blur = true
+
+[scrolling]
+history = 100000
+multiplier = 3
+
+[cursor]
+style = { shape = "Block", blinking = "On" }
+blink_interval = 1200
+
+[mouse]
+hide_when_typing = true
+
+[selection]
+save_to_clipboard = true
+
+[[keyboard.bindings]]
+key = "Insert"
+mods = "Shift"
+action = "Paste"
+
+[[keyboard.bindings]]
+key = "Insert"
+mods = "Control"
+action = "Copy"
+
+[[keyboard.bindings]]
+key = "B"
+mods = "Control"
+chars = "\u0002"
+
+[[keyboard.bindings]]
+key = "K"
+mods = "Control|Shift"
+action = "ClearHistory"
+
+[[keyboard.bindings]]
+key = "Return"
+mods = "Control|Shift"
+action = "CreateNewWindow"

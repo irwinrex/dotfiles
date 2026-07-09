@@ -1,6 +1,7 @@
--- Ensure mason-managed LSP binaries are in PATH
+-- Ensure mason-managed LSP and Go binaries are in PATH
 local data_path = vim.fn.stdpath("data")
-vim.env.PATH = data_path .. "/mason/bin:" .. vim.env.PATH
+local go_path = vim.fn.expand("$HOME/go/bin")
+vim.env.PATH = table.concat({ data_path .. "/mason/bin", go_path, vim.env.PATH }, ":")
 
 -- Core
 require("core.options")
