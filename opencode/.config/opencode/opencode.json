@@ -1,0 +1,177 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "share": "disabled",
+  "autoupdate": "notify",
+  "compaction": {
+    "auto": true,
+    "prune": true,
+    "tail_turns": 2,
+    "preserve_recent_tokens": 6000,
+    "reserved": 12000
+  },
+  "tool_output": {
+    "max_lines": 800,
+    "max_bytes": 20000
+  },
+  "attachment": {
+    "image": {
+      "auto_resize": true,
+      "max_width": 1600,
+      "max_height": 1600,
+      "max_base64_bytes": 3000000
+    }
+  },
+  "watcher": {
+    "ignore": [
+      ".git/**",
+      ".terraform/**",
+      ".terragrunt-cache/**",
+      ".venv/**",
+      "__pycache__/**",
+      ".mypy_cache/**",
+      ".pytest_cache/**",
+      ".ruff_cache/**",
+      ".next/**",
+      ".nuxt/**",
+      ".turbo/**",
+      ".cache/**",
+      "coverage/**",
+      "dist/**",
+      "build/**",
+      "target/**",
+      "node_modules/**",
+      "vendor/**",
+      "*.log",
+      "*.tfstate",
+      "*.tfstate.*",
+      "*.plan"
+    ]
+  },
+  "permission": {
+    "read": {
+      "*": "allow",
+      "*.env": "deny",
+      "*.env.*": "deny",
+      "*.env.example": "allow",
+      "*.tfstate": "deny",
+      "*.tfstate.*": "deny",
+      "*id_rsa*": "deny",
+      "*id_ed25519*": "deny",
+      "*.pem": "deny",
+      "*.key": "deny",
+      "kubeconfig*": "deny"
+    },
+    "bash": {
+      "*": "ask",
+      "pwd": "allow",
+      "ls": "allow",
+      "ls *": "allow",
+      "git status*": "allow",
+      "git diff*": "allow",
+      "git log*": "allow",
+      "git show*": "allow",
+      "rg *": "allow",
+      "fd *": "allow",
+      "find *": "allow",
+      "tree *": "allow",
+      "terraform init*": "ask",
+      "terraform fmt*": "ask",
+      "terraform validate*": "ask",
+      "terraform plan*": "ask",
+      "terraform apply*": "deny",
+      "terraform destroy*": "deny",
+      "tofu apply*": "deny",
+      "tofu destroy*": "deny",
+      "terragrunt apply*": "deny",
+      "terragrunt destroy*": "deny",
+      "kubectl get *": "ask",
+      "kubectl describe *": "ask",
+      "kubectl diff *": "ask",
+      "kubectl apply *": "ask",
+      "kubectl delete *": "deny",
+      "helm diff *": "ask",
+      "helm install *": "ask",
+      "helm upgrade *": "ask",
+      "helm uninstall *": "deny",
+      "aws *": "ask",
+      "gcloud *": "ask",
+      "az *": "ask",
+      "docker ps*": "allow",
+      "docker images*": "allow",
+      "docker build*": "ask",
+      "docker compose up*": "ask",
+      "docker compose down*": "ask",
+      "docker rm *": "deny",
+      "docker rmi *": "deny",
+      "rm *": "deny",
+      "sudo *": "ask",
+      "git push*": "ask",
+      "git reset*": "ask",
+      "git clean*": "deny"
+    },
+    "edit": "ask",
+    "external_directory": "ask",
+    "skill": {
+      "*": "allow"
+    },
+    "webfetch": "ask",
+    "websearch": "ask",
+    "doom_loop": "deny"
+  },
+  "agent": {
+    "context-scout": {
+      "description": "Builds a compact repo map before implementation. Use when context is unclear or the repository is large.",
+      "mode": "subagent",
+      "temperature": 0.1,
+      "prompt": "Map only the files needed for the current task. Prefer rg, fd, git status, and short file slices. Do not read generated, vendored, dependency, cache, state, or lock files unless directly relevant. Return: goal, relevant files, commands discovered, risks, and next action in under 30 lines.",
+      "permission": {
+        "edit": "deny",
+        "bash": {
+          "*": "ask",
+          "pwd": "allow",
+          "ls": "allow",
+          "ls *": "allow",
+          "git status*": "allow",
+          "git diff*": "allow",
+          "git log*": "allow",
+          "rg *": "allow",
+          "fd *": "allow",
+          "find *": "allow",
+          "tree *": "allow"
+        },
+        "webfetch": "deny",
+        "websearch": "deny"
+      }
+    },
+    "devops-review": {
+      "description": "Reviews infrastructure, deployment, CI/CD, Kubernetes, Terraform, containers, cloud, and operational safety without modifying files.",
+      "mode": "subagent",
+      "temperature": 0.1,
+      "prompt": "Review for DevOps production readiness. Check least privilege, secret handling, rollback paths, idempotency, observability, health checks, resource limits, drift risk, blast radius, and safe deployment order. Do not edit files. Keep findings actionable and rank by severity.",
+      "permission": {
+        "edit": "deny",
+        "bash": {
+          "*": "ask",
+          "pwd": "allow",
+          "ls": "allow",
+          "ls *": "allow",
+          "git status*": "allow",
+          "git diff*": "allow",
+          "git log*": "allow",
+          "rg *": "allow",
+          "fd *": "allow",
+          "find *": "allow",
+          "terraform plan*": "ask",
+          "terraform validate*": "ask",
+          "kubectl get *": "ask",
+          "kubectl describe *": "ask",
+          "aws *": "ask",
+          "gcloud *": "ask",
+          "az *": "ask"
+        },
+        "webfetch": "ask",
+        "websearch": "ask"
+      }
+    }
+  }
+}

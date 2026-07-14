@@ -268,6 +268,26 @@ run_stow_lazygit() {
   fi
 }
 
+run_stow_opencode() {
+  info "Setting up opencode config symlinks..."
+
+  if [[ -L "$HOME/.config/opencode" ]]; then
+    rm -f "$HOME/.config/opencode"
+  elif [[ -d "$HOME/.config/opencode" ]]; then
+    warn "Backing up existing ~/.config/opencode → ~/.config/opencode.backup"
+    mv "$HOME/.config/opencode" "$HOME/.config/opencode.backup"
+  fi
+
+  cd "$DOTFILES_DIR" && stow opencode
+
+  if [[ -L "$HOME/.config/opencode" ]]; then
+    ok "opencode config symlinks created"
+  else
+    err "Stow may not have worked correctly"
+    err "Run manually: cd ~/dotfiles && stow -v opencode"
+  fi
+}
+
 create_dirs() {
   mkdir -p "$HOME/.local/state/zsh"
   mkdir -p "$HOME/.cache/zsh"
@@ -345,6 +365,7 @@ main() {
   run_stow
   run_stow_nvim
   run_stow_lazygit
+  run_stow_opencode
   echo ""
   set_default_shell
   echo ""
