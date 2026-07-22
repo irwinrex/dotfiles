@@ -121,8 +121,14 @@ return {
     { "<leader>fk", function() Snacks.picker.keymaps() end, desc = "Keymaps" },
     { "<leader>sG", function() Snacks.picker.grep({ cwd = true }) end, desc = "Grep (cwd)" },
     { "<leader>sR", function() Snacks.picker.resume() end, desc = "Resume" },
-    { "<leader>gg", function() Snacks.lazygit() end, desc = "Lazygit" },
-    { "<leader>lg", function() Snacks.lazygit() end, desc = "Lazygit" },
+    { "<leader>gg", function()
+      local root = vim.fs.root(0, ".git")
+      Snacks.lazygit(root and { cwd = root } or {})
+    end, desc = "Lazygit (Git Root)" },
+    { "<leader>lg", function()
+      local root = vim.fs.root(0, ".git")
+      Snacks.lazygit(root and { cwd = root } or {})
+    end, desc = "Lazygit (Git Root)" },
     { "<leader>n", function() Snacks.notifier.show_history() end, desc = "Notification History" },
     { "<leader>tt", function() Snacks.terminal() end, desc = "Toggle Terminal" },
     { "<c-/>", function() Snacks.terminal() end, desc = "Toggle Terminal" },
