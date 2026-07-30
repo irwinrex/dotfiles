@@ -288,6 +288,24 @@ run_stow_opencode() {
   fi
 }
 
+run_stow_claude() {
+  info "Setting up Claude Code config symlinks..."
+
+  if [[ -f "$HOME/.claude/settings.json" && ! -L "$HOME/.claude/settings.json" ]]; then
+    warn "Backing up existing ~/.claude/settings.json → ~/.claude/settings.json.backup"
+    mv "$HOME/.claude/settings.json" "$HOME/.claude/settings.json.backup"
+  fi
+
+  cd "$DOTFILES_DIR" && stow claude
+
+  if [[ -L "$HOME/.claude/settings.json" ]]; then
+    ok "Claude config symlinks created"
+  else
+    err "Stow may not have worked correctly"
+    err "Run manually: cd ~/dotfiles && stow -v claude"
+  fi
+}
+
 create_dirs() {
   mkdir -p "$HOME/.local/state/zsh"
   mkdir -p "$HOME/.cache/zsh"
@@ -366,6 +384,7 @@ main() {
   run_stow_nvim
   run_stow_lazygit
   run_stow_opencode
+  run_stow_claude
   echo ""
   set_default_shell
   echo ""

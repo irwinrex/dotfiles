@@ -45,3 +45,17 @@ vim.filetype.add({
     hcl = "hcl",
   },
 })
+
+-- Auto-reload files when modified externally
+augroup("AutoReload", { clear = true })
+autocmd({ "FocusGained", "BufEnter", "CursorHold", "CursorHoldI" }, {
+  group = "AutoReload",
+  command = "if mode() != 'c' | checktime | endif",
+})
+
+autocmd("FileChangedShellPost", {
+  group = "AutoReload",
+  callback = function()
+    vim.notify("File changed on disk. Buffer reloaded.", vim.log.levels.WARN)
+  end,
+})

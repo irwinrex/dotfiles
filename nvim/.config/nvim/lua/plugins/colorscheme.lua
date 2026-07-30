@@ -9,6 +9,11 @@ return {
       flavour = "mocha",
       transparent_background = true,
       term_colors = true,
+      custom_highlights = function(colors)
+        return {
+          GitSignsCurrentLineBlame = { fg = colors.overlay2, italic = true },
+        }
+      end,
       styles = {
         comments = { "italic" },
         conditionals = { "italic" },

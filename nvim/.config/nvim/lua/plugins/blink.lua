@@ -2,7 +2,7 @@
 return {
   "saghen/blink.cmp",
   version = "1.*",                       -- v1.x stable, prebuilt binaries
-  event = { "InsertEnter", "CmdlineEnter" },
+  lazy = false,                          -- LSP capabilities are built during startup
   dependencies = {
     "rafamadriz/friendly-snippets",     -- optional snippets
   },

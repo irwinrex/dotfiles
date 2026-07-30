@@ -21,7 +21,6 @@ map("v", ">", ">gv", opts)
 map("v", "J", ":m '>+1<CR>gv=gv", opts)
 map("v", "K", ":m '<-2<CR>gv=gv", opts)
 
-
 -- Keep cursor centered when jumping
 map("n", "n", "nzzzv", opts)
 map("n", "N", "Nzzzv", opts)

@@ -1,13 +1,13 @@
 return {
   "stevearc/conform.nvim",
-  event = { "BufWritePre" },
+  lazy = false, -- format-on-save must be registered before the first write
   init = function()
     vim.o.formatexpr = "v:lua.require'conform'.formatexpr()"
   end,
   opts = {
     formatters_by_ft = {
       lua = { "stylua" },
-      go = { "gofumpt", "goimports" },
+      go = { "gopls" },
       terraform = { "terraform_fmt" },
       javascript = { "prettier" },
       typescript = { "prettier" },
@@ -16,8 +16,8 @@ return {
       ["*"] = { "trim_whitespace" },
     },
     format_on_save = {
-      lsp_fallback = true,
-      timeout_ms = 500,
+      lsp_format = "fallback",
+      timeout_ms = 2000,
     },
   },
 }

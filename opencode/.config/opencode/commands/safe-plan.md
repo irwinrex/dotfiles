@@ -1,6 +1,5 @@
 ---
 description: Produce a low-token implementation plan with validation and rollback
-agent: plan
 ---
 
 Create a concise implementation plan for: $ARGUMENTS
