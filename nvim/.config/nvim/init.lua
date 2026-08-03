@@ -25,7 +25,8 @@ vim.opt.rtp:prepend(lazypath)
 require("lazy").setup({
   spec = { { import = "plugins" } },
   defaults = { lazy = true },
-  install = { colorscheme = { "catppuccin" } },
+  install = { colorscheme = { "catppuccin-nvim" } },
+  rocks = { enabled = false },
   ui = { border = "rounded" },
 })
 
@@ -34,5 +35,4 @@ require("lsp")
 
 -- UI
 require("ui.statusline")
-
-vim.cmd.colorscheme("catppuccin")
+require("ui.tabline")

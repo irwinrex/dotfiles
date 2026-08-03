@@ -6,25 +6,25 @@ gui:
   language: en
   theme:
     activeBorderColor:
-      - "#89b4fa"
+      - "#f5a97f"
       - bold
     inactiveBorderColor:
-      - "#a6adc8"
+      - "#5b6078"
     searchingActiveBorderColor:
-      - "#89b4fa"
+      - "#f5a97f"
       - bold
     optionsTextColor:
-      - "#89b4fa"
+      - "#8aadf4"
     selectedLineBgColor:
-      - "#313244"
+      - "#494d64"
     cherryPickedCommitBgColor:
-      - "#45475a"
+      - "#f0c6c6"
     cherryPickedCommitFgColor:
-      - "#89b4fa"
+      - "#8aadf4"
     unstagedChangesColor:
-      - "#f38ba8"
+      - "#ed8796"
     defaultFgColor:
-      - "#cdd6f4"
+      - "#cad3f5"
 
 git:
   paging:

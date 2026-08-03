@@ -4,9 +4,4 @@ return {
     event = "VeryLazy",
     opts = {},
   },
-  {
-    "echasnovski/mini.comment",
-    event = "VeryLazy",
-    opts = {},
-  },
 }

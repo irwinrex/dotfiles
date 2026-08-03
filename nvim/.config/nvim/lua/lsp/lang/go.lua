@@ -2,48 +2,38 @@ vim.lsp.config("gopls", {
   settings = {
     gopls = {
       analyses = {
-        -- Already enabled
+        shadow = true,
         unusedparams = true,
         nilness = true,
         unusedwrite = true,
-        -- High-value additions
-        shadow = true,
-        lostcancel = true,
-        nilfunc = true,
-        structtag = true,
-        unreachable = true,
-        unusedvariable = true,
-        slog = true,
-        appends = true,
-        assign = true,
-        atomic = true,
-        defers = true,
-        infertypeargs = true,
         useany = true,
-        testinggoroutine = true,
-        -- Code-action analyzers (fill struct/return suggestions)
-        fillreturns = true,
-        fillstruct = true,
       },
+      vulncheck = "Imports",
       staticcheck = true,
       gofumpt = true,
-      usePlaceholders = false,
-      semanticTokens = true,
-      directoryFilters = { "-vendor", "-**/.git", "-**/node_modules" },
+      usePlaceholders = true,
+      completeUnimported = true,
+      semanticTokens = false,
+      directoryFilters = { "-**/.git", "-**/node_modules", "-**/vendor" },
+      hints = {
+        assignVariableTypes = false,
+        compositeLiteralFields = true,
+        constantValues = true,
+        parameterNames = true,
+        rangeVariableTypes = false,
+        functionTypeParameters = false,
+      },
     },
   },
 })
 vim.lsp.enable("gopls")
 
-vim.api.nvim_create_autocmd("BufWritePre", {
-  pattern = "*.go",
-  callback = function()
-    local clients = vim.lsp.get_clients({ name = "gopls", bufnr = 0 })
-    if #clients > 0 then
-      vim.lsp.buf.code_action({
-        context = { only = { "source.organizeImports" } },
-        apply = true,
-      })
+-- Enable inlay hints for gopls (Neovim 0.10+)
+vim.api.nvim_create_autocmd("LspAttach", {
+  callback = function(args)
+    local client = vim.lsp.get_client_by_id(args.data.client_id)
+    if client and client.name == "gopls" then
+      vim.lsp.inlay_hint.enable(true, { bufnr = args.buf })
     end
   end,
 })

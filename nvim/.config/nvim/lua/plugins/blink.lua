@@ -8,12 +8,10 @@ return {
   },
   opts = {
     keymap = {
-      preset = "default",
-      ["<C-y>"] = { "select_and_accept" },
-      ["<CR>"] = { "select_and_accept", "fallback" },
-      ["<Tab>"] = { "select_next", "snippet_forward", "fallback" },
-      ["<S-Tab>"] = { "select_prev", "snippet_backward", "fallback" },
-      ["<C-e>"] = { "hide", "fallback" },
+      preset = "none",
+      ["<c-n>"] = { "select_next", "fallback" },
+      ["<c-p>"] = { "select_prev", "fallback" },
+      ["<c-y>"] = { "select_and_accept", "fallback" },
     },
     sources = {
       default = { "lsp", "path", "snippets", "buffer" },

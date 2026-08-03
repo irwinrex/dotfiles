@@ -22,6 +22,7 @@ return {
         "gopls",
         "jsonls",
         "lua_ls",
+        "ruff",
         "terraformls",
         "yamlls",
       },
@@ -34,7 +35,10 @@ return {
     event = "VeryLazy",
     dependencies = { "mason.nvim" },
     opts = {
-      ensure_installed = {},
+      ensure_installed = {
+        "prettier",
+        "stylua",
+      },
     },
   },
 }

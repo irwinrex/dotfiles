@@ -1,17 +1,37 @@
+local parsers = {
+  "bash",
+  "c",
+  "css",
+  "dockerfile",
+  "go",
+  "hcl",
+  "html",
+  "javascript",
+  "json",
+  "lua",
+  "markdown",
+  "markdown_inline",
+  "python",
+  "query",
+  "regex",
+  "rust",
+  "sql",
+  "terraform",
+  "toml",
+  "tsx",
+  "typescript",
+  "vim",
+  "vimdoc",
+  "yaml",
+}
+
 return {
   "nvim-treesitter/nvim-treesitter",
   branch = "main",
-  build = function()
-    require("nvim-treesitter").install({
-      "bash", "c", "css", "dockerfile", "go", "hcl", "html",
-      "javascript", "json", "lua", "markdown", "markdown_inline",
-      "python", "query", "rust", "sql", "terraform", "toml",
-      "typescript", "vim", "vimdoc", "yaml",
-    })
-  end,
-  init = function()
-    vim.treesitter.language.register("hcl", "terraform")
-    vim.treesitter.language.register("hcl", "terraform-vars")
+  lazy = false,
+  build = ":TSUpdate",
+  config = function()
+    require("nvim-treesitter").install(parsers)
 
     vim.api.nvim_create_autocmd("FileType", {
       callback = function()

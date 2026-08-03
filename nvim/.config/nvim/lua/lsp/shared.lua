@@ -1,6 +1,4 @@
-local capabilities = require("blink.cmp").get_lsp_capabilities(
-  vim.lsp.protocol.make_client_capabilities()
-)
+local capabilities = require("blink.cmp").get_lsp_capabilities(vim.lsp.protocol.make_client_capabilities())
 
 vim.diagnostic.config({
   severity_sort = true,
@@ -17,19 +15,17 @@ vim.diagnostic.config({
 vim.lsp.config("*", {
   capabilities = capabilities,
   on_attach = function(client, bufnr)
-    local function bufopts(desc)
-      return { buffer = bufnr, silent = true, desc = desc }
-    end
+    local function bufopts(desc) return { buffer = bufnr, silent = true, desc = desc } end
 
     vim.keymap.set("n", "gD", vim.lsp.buf.declaration, bufopts("Go to declaration"))
     vim.keymap.set("n", "gd", vim.lsp.buf.definition, bufopts("Go to definition"))
-    vim.keymap.set("n", "K", vim.lsp.buf.hover, bufopts("Hover documentation"))
-    vim.keymap.set("n", "gi", vim.lsp.buf.implementation, bufopts("Go to implementation"))
-    vim.keymap.set("n", "gr", vim.lsp.buf.references, bufopts("Find references"))
-    vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, bufopts("Rename symbol"))
-    vim.keymap.set({ "n", "x" }, "<leader>ca", vim.lsp.buf.code_action, bufopts("Code action"))
+    vim.keymap.set("n", "<leader>lr", ":LspRestart<CR>", bufopts("Restart LSP server"))
     vim.keymap.set("n", "<leader>f", function()
-      require("conform").format({ async = true, lsp_format = "fallback" })
+      if vim.bo[bufnr].filetype == "go" then
+        vim.lsp.buf.format({ bufnr = bufnr, name = "gopls", async = true })
+      else
+        require("conform").format({ async = true, lsp_format = "fallback" })
+      end
     end, bufopts("Format buffer"))
 
     vim.notify(client.name .. " attached", vim.log.levels.DEBUG)

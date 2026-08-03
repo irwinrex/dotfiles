@@ -6,8 +6,7 @@ vim.opt.autoread = true
 vim.opt.backspace = { "indent", "eol", "start" }
 vim.opt.clipboard = "unnamedplus"
 vim.opt.mouse = "a"
-vim.opt.swapfile = false
-vim.opt.writebackup = false
+vim.opt.undofile = true
 
 vim.opt.ignorecase = true
 vim.opt.smartcase = true
@@ -39,4 +38,4 @@ vim.opt.synmaxcol = 240
 
 vim.opt.termguicolors = true
 
-vim.opt.winblend = 10
+vim.opt.winblend = 5

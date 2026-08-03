@@ -25,23 +25,6 @@ map("v", "K", ":m '<-2<CR>gv=gv", opts)
 map("n", "n", "nzzzv", opts)
 map("n", "N", "Nzzzv", opts)
 
--- Buffer navigation
-map("n", "H", "<cmd>bprevious<CR>", opts)
-map("n", "L", "<cmd>bnext<CR>", opts)
-map("n", "J", "<cmd>bmove +1<CR>", opts)
-map("n", "K", "<cmd>bmove -1<CR>", opts)
-map("n", "<leader>bd", function()
-  vim.api.nvim_buf_delete(vim.api.nvim_get_current_buf(), { force = true })
-end, opts)
-map("n", "<leader>bp", function()
-  local current = vim.api.nvim_get_current_buf()
-  for _, buf in ipairs(vim.api.nvim_list_bufs()) do
-    if buf ~= current and vim.api.nvim_buf_is_loaded(buf) then
-      vim.api.nvim_buf_delete(buf, { force = true })
-    end
-  end
-end, opts)
-
 -- Quick save
 map({ "n", "x" }, "<leader>w", "<cmd>write<CR>", opts)
 map({ "n", "x" }, "<leader>q", "<cmd>quit<CR>", opts)
