@@ -13,9 +13,11 @@ return {
       typescriptreact = { "prettier" },
       ["*"] = { "trim_whitespace" },
     },
-    format_on_save = {
-      lsp_format = "fallback",
-      timeout_ms = 2000,
-    },
+    format_on_save = function(bufnr)
+      if vim.bo[bufnr].filetype == "go" then
+        return { lsp_format = "prefer", name = "gopls", timeout_ms = 2000 }
+      end
+      return { lsp_format = "fallback", timeout_ms = 2000 }
+    end,
   },
 }

@@ -38,4 +38,4 @@ vim.opt.synmaxcol = 240
 
 vim.opt.termguicolors = true
 
-vim.opt.winblend = 5
+vim.opt.winblend = 0

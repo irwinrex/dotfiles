@@ -224,6 +224,14 @@ return {
         },
       },
       actions = {
+        copy_selection = function(picker)
+          local items = picker:selected({ fallback = true })
+          local lines = vim.tbl_map(function(item)
+            return item.text or item.data or ""
+          end, items)
+          vim.fn.setreg(vim.v.register, table.concat(lines, "\n"))
+          Snacks.notify(("Copied %d item(s)"):format(#lines), { title = "Snacks Picker" })
+        end,
         buffer_pin = toggle_picker_buffer_pin,
         opencode_send = function(picker)
           local items = vim.tbl_map(
@@ -242,6 +250,7 @@ return {
             ["<c-n>"] = { "list_down", mode = { "i", "n" } },
             ["<c-p>"] = { "list_up", mode = { "i", "n" } },
             ["<c-y>"] = { "confirm", mode = { "i", "n" } },
+            ["<c-s-y>"] = { "copy_selection", mode = { "i", "n" } },
           },
         },
         list = {
@@ -251,6 +260,8 @@ return {
             ["<c-n>"] = "list_down",
             ["<c-p>"] = "list_up",
             ["<c-y>"] = "confirm",
+            ["<c-s-y>"] = "copy_selection",
+            y = "copy_selection",
           },
         },
       },

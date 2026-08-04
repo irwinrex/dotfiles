@@ -9,6 +9,8 @@ return {
   opts = {
     keymap = {
       preset = "none",
+      ["<Tab>"] = { "select_next", "fallback" },
+      ["<S-Tab>"] = { "select_prev", "fallback" },
       ["<c-n>"] = { "select_next", "fallback" },
       ["<c-p>"] = { "select_prev", "fallback" },
       ["<c-y>"] = { "select_and_accept", "fallback" },

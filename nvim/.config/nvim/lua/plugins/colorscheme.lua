@@ -61,7 +61,7 @@ return {
             CursorLine = { bg = colors.surface0 },
             CursorLineNr = { fg = colors.lavender, bg = colors.surface0, bold = true },
             CursorLineSign = { bg = colors.surface0 },
-            LineNr = { fg = colors.surface1 },
+            LineNr = { fg = colors.surface2 },
             Visual = { bg = colors.surface1 },
             VisualNOS = { bg = colors.surface1 },
             MatchParen = { fg = colors.peach, bold = true, underline = true },
@@ -100,10 +100,10 @@ return {
             SnacksPickerBufPin = { fg = colors.peach, bold = true },
 
             -- Quiet chrome keeps attention on code, with lavender as the accent.
-            Comment = { fg = colors.overlay1, italic = true },
+            Comment = { fg = colors.subtext0, italic = true },
             Folded = { fg = colors.blue, bg = colors.surface0, italic = true },
-            NonText = { fg = colors.surface1 },
-            Whitespace = { fg = colors.surface0 },
+            NonText = { fg = colors.surface2 },
+            Whitespace = { fg = colors.surface2 },
             Directory = { fg = colors.blue, bold = true },
             Title = { fg = colors.mauve, bold = true },
             QuickFixLine = { bg = colors.surface0, bold = true },
