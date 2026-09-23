@@ -61,6 +61,12 @@
       "*.map"
     ]
   },
+  "lsp": {
+    "terraform": {
+      "command": ["terraform-ls", "serve"],
+      "extensions": [".tf", ".tfvars"]
+    }
+  },
   "permission": {
     "read": {
       "*": "allow",
@@ -119,12 +125,17 @@
       "terraform init*": "ask",
       "terraform fmt*": "ask",
       "terraform validate*": "ask",
-      "terraform plan*": "ask",
-      "terraform apply*": "deny",
+      "terraform plan*": "allow",
+      "terraform apply*": "allow",
+      "terraform *-destroy*": "deny",
       "terraform destroy*": "deny",
-      "tofu apply*": "deny",
+      "tofu plan*": "allow",
+      "tofu apply*": "allow",
+      "tofu *-destroy*": "deny",
       "tofu destroy*": "deny",
-      "terragrunt apply*": "deny",
+      "terragrunt plan*": "allow",
+      "terragrunt apply*": "allow",
+      "terragrunt *-destroy*": "deny",
       "terragrunt destroy*": "deny",
       "kubectl get *": "ask",
       "kubectl describe *": "ask",

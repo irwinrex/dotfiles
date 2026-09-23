@@ -1,0 +1,83 @@
+# General settings
+remember_sort = true
+
+# ==============================================================================
+# 1. Custom View for Kubernetes Nodes (Ported & Enhanced from k9s views.yaml)
+# ==============================================================================
+[views."v1/nodes"]
+replace = true
+sort = "NAME:asc"
+columns = [
+  { name = "NAME", builtin = "NAME" },
+  { name = "STATUS", builtin = "STATUS" },
+  { name = "ROLES", builtin = "ROLES", wide = true },
+  { name = "VERSION", builtin = "VERSION", wide = true },
+  # Instance Type label (RFC 6901 escaped)
+  { name = "INSTANCE-TYPE", path = "/metadata/labels/node.kubernetes.io~1instance-type" },
+  # EKS Nodegroup label (fixed width so it does not overflow the screen)
+  { name = "NODEGROUP", path = "/metadata/labels/eks.amazonaws.com~1nodegroup", width = 18 },
+  # Karpenter NodeClass / NodePool (if present)
+  { name = "NODECLASS", path = "/metadata/labels/karpenter.k8s.aws~1ec2nodeclass", wide = true },
+  { name = "NODEPOOL", path = "/metadata/labels/karpenter.sh~1nodepool", wide = true },
+  # Allocatable CPU and Memory (Node capacity available for scheduling)
+  { name = "CPU/A", path = "/status/allocatable/cpu", type = "quantity", format = "cpu", wide = true },
+  { name = "MEM/A", path = "/status/allocatable/memory", type = "quantity", format = "memory", wide = true },
+  # Live Usage & Utilization percentage
+  { name = "CPU", metric = "cpu" },
+  { name = "%CPU", metric = "node-cpu-utilization" },
+  { name = "MEM", metric = "memory" },
+  { name = "%MEM", metric = "node-memory-utilization" },
+  { name = "PODS", metric = "node-pods" },
+  { name = "AGE", builtin = "AGE" },
+]
+
+# ==============================================================================
+# 2. Karpenter NodePools: Displaying Instance Limits & Allocated Resources
+# ==============================================================================
+[views."karpenter.sh/v1/nodepools"]
+replace = true
+sort = "NAME:asc"
+columns = [
+  { name = "NAME", path = "/metadata/name" },
+  { name = "NODECLASS", path = "/spec/template/spec/nodeClassRef/name" },
+  # Defined limits for the pool
+  { name = "CPU-LIMIT", path = "/spec/limits/cpu", type = "quantity", format = "cpu" },
+  { name = "MEM-LIMIT", path = "/spec/limits/memory", type = "quantity", format = "memory" },
+  # Current usage / requests against limits
+  { name = "CPU-REQ", path = "/status/resources/cpu", type = "quantity", format = "cpu" },
+  { name = "MEM-REQ", path = "/status/resources/memory", type = "quantity", format = "memory" },
+  { name = "READY", path = "Ready", type = "condition" },
+  { name = "AGE", path = "/metadata/creationTimestamp", type = "time" },
+]
+
+# ==============================================================================
+# 3. Custom / Generic InstanceClass CRD View (if using a CRD named instanceclasses)
+# ==============================================================================
+[views."instanceclasses"]
+columns = [
+  { name = "CPU-REQ", path = "/spec/resources/requests/cpu", type = "quantity", format = "cpu" },
+  { name = "CPU-LIM", path = "/spec/resources/limits/cpu", type = "quantity", format = "cpu" },
+  { name = "MEM-REQ", path = "/spec/resources/requests/memory", type = "quantity", format = "memory" },
+  { name = "MEM-LIM", path = "/spec/resources/limits/memory", type = "quantity", format = "memory" },
+]
+
+# ==============================================================================
+# 4. Pods: Detailed Request & Limit Columns
+# ==============================================================================
+[views."v1/pods"]
+replace = true
+columns = [
+  { name = "NAME", builtin = "NAME" },
+  { name = "READY", builtin = "READY" },
+  { name = "STATUS", builtin = "STATUS" },
+  { name = "RESTARTS", builtin = "RESTARTS" },
+  { name = "CPU", metric = "cpu" },
+  { name = "%CPU", metric = "cpu-request-utilization" },
+  { name = "MEM", metric = "memory" },
+  { name = "%MEM", metric = "memory-request-utilization" },
+  { name = "CPU/R", metric = "cpu-request" },
+  { name = "CPU/L", metric = "cpu-limit" },
+  { name = "MEM/R", metric = "memory-request" },
+  { name = "MEM/L", metric = "memory-limit" },
+  { name = "AGE", builtin = "AGE" },
+]

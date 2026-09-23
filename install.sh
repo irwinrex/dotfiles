@@ -306,6 +306,46 @@ run_stow_claude() {
   fi
 }
 
+run_stow_sofka() {
+  info "Setting up sofka config symlinks..."
+
+  if [[ -L "$HOME/.config/sofka" ]]; then
+    rm -f "$HOME/.config/sofka"
+  elif [[ -d "$HOME/.config/sofka" ]]; then
+    warn "Backing up existing ~/.config/sofka → ~/.config/sofka.backup"
+    mv "$HOME/.config/sofka" "$HOME/.config/sofka.backup"
+  fi
+
+  cd "$DOTFILES_DIR" && stow sofka
+
+  if [[ -L "$HOME/.config/sofka" ]]; then
+    ok "sofka config symlinks created"
+  else
+    err "Stow may not have worked correctly"
+    err "Run manually: cd ~/dotfiles && stow -v sofka"
+  fi
+}
+
+run_stow_k9s() {
+  info "Setting up k9s config symlinks..."
+
+  if [[ -L "$HOME/.config/k9s" ]]; then
+    rm -f "$HOME/.config/k9s"
+  elif [[ -d "$HOME/.config/k9s" ]]; then
+    warn "Backing up existing ~/.config/k9s → ~/.config/k9s.backup"
+    mv "$HOME/.config/k9s" "$HOME/.config/k9s.backup"
+  fi
+
+  cd "$DOTFILES_DIR" && stow k9s
+
+  if [[ -L "$HOME/.config/k9s" ]]; then
+    ok "k9s config symlinks created"
+  else
+    err "Stow may not have worked correctly"
+    err "Run manually: cd ~/dotfiles && stow -v k9s"
+  fi
+}
+
 create_dirs() {
   mkdir -p "$HOME/.local/state/zsh"
   mkdir -p "$HOME/.cache/zsh"
@@ -385,6 +425,8 @@ main() {
   run_stow_lazygit
   run_stow_opencode
   run_stow_claude
+  run_stow_sofka
+  run_stow_k9s
   echo ""
   set_default_shell
   echo ""
