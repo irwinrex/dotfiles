@@ -90,6 +90,104 @@ local function delete_buffer_group(direction)
   Snacks.bufdelete.delete({ filter = function(buf) return targets[buf] == true end })
 end
 
+local function diagnostic_float_lines(item)
+  local diag = item and (item.item or item.diag)
+  if type(diag) ~= "table" or type(diag.message) ~= "string" then
+    return nil, nil
+  end
+  local sev = diag.severity and vim.diagnostic.severity[diag.severity] or "INFO"
+  local loc = ""
+  if item.file then
+    loc = vim.fn.fnamemodify(item.file, ":~:.")
+    if item.lnum then
+      loc = ("%s:%d"):format(loc, item.lnum + 1)
+    end
+  end
+  local header = ("# %s"):format(sev)
+  if diag.source or diag.code then
+    header = header .. ("  (%s%s)"):format(diag.source or "", diag.code and (" " .. diag.code) or "")
+  end
+  local lines = { header, "" }
+  if loc ~= "" then
+    lines[#lines + 1] = ("`%s`"):format(loc)
+    lines[#lines + 1] = ""
+  end
+  for _, l in ipairs(vim.split(diag.message, "\n")) do
+    lines[#lines + 1] = l
+  end
+  return lines, diag
+end
+
+local function open_wrapped_float(lines, ft)
+  local _, win = vim.lsp.util.open_floating_preview(lines, ft or "markdown", {
+    border = "rounded",
+    focusable = true,
+    focus = true,
+    wrap = true,
+    max_width = 100,
+    max_height = 30,
+  })
+  if win and vim.api.nvim_win_is_valid(win) then
+    vim.wo[win].wrap = true
+    vim.wo[win].linebreak = true
+    vim.wo[win].breakindent = true
+  end
+  return win
+end
+
+-- Show full wrapped message without leaving the picker (no copy-paste needed).
+local function show_selected_diagnostic(picker)
+  local item = picker:current()
+  local lines = item and diagnostic_float_lines(item)
+  if not lines then
+    Snacks.notify("No diagnostic under cursor", { title = "Diagnostics" })
+    return
+  end
+  open_wrapped_float(lines, "markdown")
+end
+
+-- Jump like <CR> does, then open the full wrapped float at the target.
+local function confirm_diagnostic_and_float(picker)
+  local item = picker:current()
+  picker:close()
+  if not item then
+    return
+  end
+  if item.buf and vim.api.nvim_buf_is_valid(item.buf) then
+    vim.api.nvim_set_current_buf(item.buf)
+  elseif item.file then
+    vim.cmd.edit(vim.fn.fnameescape(item.file))
+  end
+  if item.pos then
+    pcall(vim.api.nvim_win_set_cursor, 0, { item.pos[1], math.max(item.pos[2] - 1, 0) })
+  elseif item.lnum then
+    pcall(vim.api.nvim_win_set_cursor, 0, { item.lnum + 1, 0 })
+  end
+  vim.defer_fn(function()
+    local _, win = vim.diagnostic.open_float({ header = "Diagnostics", suffix = "" })
+    if win and vim.api.nvim_win_is_valid(win) then
+      vim.wo[win].wrap = true
+      vim.wo[win].linebreak = true
+      vim.wo[win].breakindent = true
+    end
+  end, 20)
+end
+
+local diagnostics_list_win = {
+  wo = { wrap = true, linebreak = true, breakindent = true },
+  keys = {
+    e = "diagnostic_show",
+    ["<c-e>"] = "diagnostic_show",
+    ["<CR>"] = "diagnostic_confirm",
+  },
+}
+
+local diagnostics_input_win = {
+  keys = {
+    ["<c-e>"] = "diagnostic_show",
+  },
+}
+
 return {
   "folke/snacks.nvim",
   lazy = false,
@@ -203,6 +301,14 @@ return {
             },
           },
         },
+        diagnostics = {
+          layout = { preset = "default" },
+          win = { list = diagnostics_list_win, input = diagnostics_input_win },
+        },
+        diagnostics_buffer = {
+          layout = { preset = "default" },
+          win = { list = diagnostics_list_win, input = diagnostics_input_win },
+        },
         explorer = {
           include = { ".gitignore" },
           on_show = function(picker)
@@ -227,12 +333,14 @@ return {
         copy_selection = function(picker)
           local items = picker:selected({ fallback = true })
           local lines = vim.tbl_map(function(item)
-            return item.text or item.data or ""
+            return item.comment or item.text or item.data or ""
           end, items)
           vim.fn.setreg(vim.v.register, table.concat(lines, "\n"))
           Snacks.notify(("Copied %d item(s)"):format(#lines), { title = "Snacks Picker" })
         end,
         buffer_pin = toggle_picker_buffer_pin,
+        diagnostic_show = show_selected_diagnostic,
+        diagnostic_confirm = confirm_diagnostic_and_float,
       },
       win = {
         input = {

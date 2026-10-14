@@ -23,6 +23,7 @@ return {
         "jsonls",
         "lua_ls",
         "ruff",
+        "rust_analyzer",
         "terraformls",
         "yamlls",
       },

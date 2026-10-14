@@ -1,4 +1,5 @@
 vim.opt.statusline = table.concat({
+  "%#StatusLineAccent# %{toupper(mode())} ",
   "%#StatusLineAccent# %{&modified ? ' ●' : '  '} %f ",
   "%#StatusLine#%{&readonly ? '  ' : ''}",
   "%=",

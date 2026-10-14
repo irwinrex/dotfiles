@@ -6,9 +6,13 @@ vim.diagnostic.config({
   underline = true,
   signs = true,
   virtual_text = false,
+  jump = { float = true },
   float = {
     border = "rounded",
     source = true,
+    header = "Diagnostics",
+    suffix = "",
+    focusable = true,
   },
 })
 
@@ -23,6 +27,8 @@ vim.lsp.config("*", {
     vim.keymap.set("n", "<leader>f", function()
       if vim.bo[bufnr].filetype == "go" then
         vim.lsp.buf.format({ bufnr = bufnr, name = "gopls", async = true })
+      elseif vim.bo[bufnr].filetype == "rust" then
+        vim.lsp.buf.format({ bufnr = bufnr, name = "rust_analyzer", async = true })
       else
         require("conform").format({ async = true, lsp_format = "fallback" })
       end
