@@ -6,7 +6,11 @@ vim.diagnostic.config({
   underline = true,
   signs = true,
   virtual_text = false,
-  jump = { float = true },
+  jump = {
+    on_jump = function(_, bufnr)
+      vim.diagnostic.open_float({ bufnr = bufnr })
+    end,
+  },
   float = {
     border = "rounded",
     source = true,
