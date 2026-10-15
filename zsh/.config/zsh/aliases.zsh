@@ -16,17 +16,13 @@ alias grep='grep --color=auto'
 # Editor
 # =========================================================
 
-alias vim='nvim'
+alias v='nvim'
 
 # =========================================================
 # Navigation
 # =========================================================
 
 alias cls='clear'
-alias d='cd ~/Documents/'
-alias dot='cd ~/dotfiles/'
-alias conf='cd ~/.config'
-alias p='cd ~/Documents/projects'
 alias -- -='cd -'
 
 # =========================================================
