@@ -346,6 +346,30 @@ run_stow_k9s() {
   fi
 }
 
+run_stow_agy() {
+  info "Setting up antigravity config symlinks..."
+
+  mkdir -p "$HOME/.gemini" "$HOME/.gemini/antigravity-cli"
+
+  for target in "$HOME/.gemini/GEMINI.md" "$HOME/.gemini/antigravity-cli/settings.json"; do
+    if [[ -L "$target" ]]; then
+      rm -f "$target"
+    elif [[ -f "$target" ]]; then
+      warn "Backing up existing $target → $target.backup"
+      mv "$target" "$target.backup"
+    fi
+  done
+
+  cd "$DOTFILES_DIR" && stow agy
+
+  if [[ -L "$HOME/.gemini/GEMINI.md" && -L "$HOME/.gemini/antigravity-cli/settings.json" ]]; then
+    ok "antigravity config symlinks created"
+  else
+    err "Stow may not have worked correctly"
+    err "Run manually: cd ~/dotfiles && stow -v agy"
+  fi
+}
+
 create_dirs() {
   mkdir -p "$HOME/.local/state/zsh"
   mkdir -p "$HOME/.cache/zsh"
@@ -427,6 +451,7 @@ main() {
   run_stow_claude
   run_stow_sofka
   run_stow_k9s
+  run_stow_agy
   echo ""
   set_default_shell
   echo ""
