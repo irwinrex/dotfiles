@@ -17,6 +17,8 @@ alias grep='grep --color=auto'
 # =========================================================
 
 alias v='nvim'
+alias nvim='nvim'
+alias vim='nvim'
 
 # =========================================================
 # Navigation
