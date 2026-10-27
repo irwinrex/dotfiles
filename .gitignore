@@ -2,7 +2,6 @@
 *.zwc
 .zcompdump
 local.zsh
-zsh/.config/zsh/plugins/
 tpm
 .DS_Store
 k9s/.config/k9s/clusters/

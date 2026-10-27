@@ -370,6 +370,51 @@ run_stow_agy() {
   fi
 }
 
+install_omz() {
+  local omz_dir="$HOME/.oh-my-zsh"
+  local custom_plugins="$omz_dir/custom/plugins"
+
+  if [[ -f "$omz_dir/oh-my-zsh.sh" ]]; then
+    ok "Oh My Zsh is already installed"
+  else
+    info "Installing Oh My Zsh..."
+    if ! command -v git >/dev/null 2>&1; then
+      err "git not found (required to install Oh My Zsh)"
+      return 1
+    fi
+    # Use git clone instead of the official curl installer so we do not
+    # overwrite the stowed ~/.zshrc.
+    git clone --depth=1 https://github.com/ohmyzsh/ohmyzsh.git "$omz_dir" >/dev/null 2>&1 || {
+      err "Failed to clone Oh My Zsh"
+      return 1
+    }
+    ok "Oh My Zsh installed"
+  fi
+
+  mkdir -p "$custom_plugins"
+
+  local plugin repo
+  for plugin in zsh-autosuggestions zsh-syntax-highlighting zsh-vi-mode; do
+    case "$plugin" in
+      zsh-autosuggestions)    repo="zsh-users/zsh-autosuggestions" ;;
+      zsh-syntax-highlighting) repo="zsh-users/zsh-syntax-highlighting" ;;
+      zsh-vi-mode)            repo="jeffreytse/zsh-vi-mode" ;;
+    esac
+
+    if [[ -d "$custom_plugins/$plugin" ]]; then
+      ok "Oh My Zsh plugin $plugin is already installed"
+      continue
+    fi
+
+    info "Installing Oh My Zsh plugin $plugin..."
+    git clone --depth=1 "https://github.com/${repo}.git" "$custom_plugins/$plugin" >/dev/null 2>&1 || {
+      warn "Failed to clone $plugin"
+      continue
+    }
+    ok "Oh My Zsh plugin $plugin installed"
+  done
+}
+
 create_dirs() {
   mkdir -p "$HOME/.local/state/zsh"
   mkdir -p "$HOME/.cache/zsh"
@@ -444,6 +489,7 @@ main() {
   echo ""
   ensure_stow
   create_dirs
+  install_omz
   run_stow
   run_stow_nvim
   run_stow_lazygit
@@ -462,8 +508,7 @@ main() {
   echo ""
   info "Next steps:"
   info "  1. Restart your terminal or run: exec zsh"
-  info "  2. First startup will clone plugins (may take a few seconds)"
-  info "  3. Update plugins later with: zplugin-update"
+  info "  2. Update Oh My Zsh later with: omz update"
   echo ""
   ok "Happy hacking!"
 }
