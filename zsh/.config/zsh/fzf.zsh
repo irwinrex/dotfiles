@@ -12,6 +12,7 @@ export FZF_DEFAULT_OPTS='
   --prompt="  "
   --pointer="  "
   --preview-window=right:65%:wrap:border-left
+  --bind="ctrl-n:down,ctrl-p:up,ctrl-y:accept"
 '
 
 _fzf_preview_cmd() {
@@ -23,6 +24,14 @@ _fzf_preview_cmd() {
 }
 
 export FZF_CTRL_T_OPTS="--preview '$(_fzf_preview_cmd)'"
+
+export FZF_CTRL_R_OPTS="
+  --prompt='󰍉 History > '
+  --height=60%
+  --layout=reverse
+  --border=rounded
+  --bind='ctrl-n:down,ctrl-p:up,ctrl-y:accept'
+"
 
 _fzf_file_no_hidden() {
   local cmd result

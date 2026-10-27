@@ -5,12 +5,10 @@
 # --- Terminal (Compatibility First) ---
 term = xterm-256color
 
-# --- Font (multi-fallback for dev workflows) ---
-font-family = JetBrains Mono
-font-family = Symbols Nerd Font
-font-style = Regular
+# --- Font ---
+font-family = "JetBrainsMono Nerd Font Mono"
 font-size = 16
-font-thicken = false
+font-thicken = true
 
 # --- Theme (1.2+ format requires quotes for spaces) ---
 theme = "Catppuccin Mocha"
@@ -32,7 +30,7 @@ confirm-close-surface = false
 window-save-state = never
 
 # --- Cursor ---
-cursor-style = block
+cursor-style = bar
 cursor-style-blink = false
 
 # --- Scrollback (balanced memory vs usability) ---

@@ -33,6 +33,7 @@ setopt NUMERIC_GLOB_SORT
 # Completion
 # =========================================================
 
+zmodload -i zsh/complist
 autoload -Uz compinit
 if [[ -f "$HOME/.cache/zsh/zcompdump" ]]; then
   compinit -C -d "$HOME/.cache/zsh/zcompdump"
