@@ -37,9 +37,8 @@ map({ "n", "x" }, "<leader>qq", "<cmd>qa!<CR>", opts)
 -- Clear search highlight
 map("n", "<Esc>", "<cmd>nohlsearch<CR>", opts)
 
--- Terminal mode: escape + close + window navigation
+-- Terminal mode: escape + window navigation
 map("t", "<Esc><Esc>", "<C-\\><C-n>", opts)
-map("t", "<c-/>", "<C-\\><C-n><cmd>close<CR>", opts)
 map("t", "<C-h>", "<C-\\><C-n><C-w>h", opts)
 map("t", "<C-j>", "<C-\\><C-n><C-w>j", opts)
 map("t", "<C-k>", "<C-\\><C-n><C-w>k", opts)

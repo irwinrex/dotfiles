@@ -12,8 +12,8 @@ return {
       },
       transparent_background = true,
       float = {
-        transparent = false,
-        solid = true,
+        transparent = true,
+        solid = false,
       },
       term_colors = true,
       styles = {
@@ -69,16 +69,37 @@ return {
             IncSearch = { fg = colors.crust, bg = colors.peach, bold = true },
             CurSearch = { fg = colors.crust, bg = colors.red, bold = true },
 
-            -- Solid floating surfaces sit above the transparent editor.
-            NormalFloat = { fg = colors.text, bg = colors.mantle },
-            FloatBorder = { fg = colors.surface2, bg = colors.mantle },
-            FloatTitle = { fg = colors.lavender, bg = colors.mantle, bold = true },
-            Pmenu = { fg = colors.subtext1, bg = colors.mantle },
+            -- Transparent floating surfaces to let terminal background and shaders show through.
+            NormalFloat = { fg = colors.text, bg = colors.none },
+            FloatBorder = { fg = colors.surface1, bg = colors.none },
+            FloatTitle = { fg = colors.lavender, bg = colors.none, bold = true },
+            FloatFooter = { fg = colors.subtext0, bg = colors.none },
+            Pmenu = { fg = colors.subtext1, bg = colors.none },
             PmenuSel = { fg = colors.text, bg = colors.surface1, bold = true },
             PmenuMatch = { fg = colors.mauve, bold = true },
             WinSeparator = { fg = colors.surface1 },
 
-            -- The explorer is a transparent sidebar; other pickers stay solid.
+            -- Snacks.nvim core & picker transparency (explorer, files, grep, etc.)
+            SnacksNormal = { fg = colors.text, bg = colors.none },
+            SnacksNormalNC = { fg = colors.text, bg = colors.none },
+            SnacksPicker = { fg = colors.text, bg = colors.none },
+            SnacksPickerBorder = { fg = colors.surface1, bg = colors.none },
+            SnacksPickerTitle = { fg = colors.lavender, bg = colors.none, bold = true },
+            SnacksPickerList = { fg = colors.text, bg = colors.none },
+            SnacksPickerListBorder = { fg = colors.surface1, bg = colors.none },
+            SnacksPickerListTitle = { fg = colors.lavender, bg = colors.none, bold = true },
+            SnacksPickerBox = { fg = colors.text, bg = colors.none },
+            SnacksPickerBoxBorder = { fg = colors.surface1, bg = colors.none },
+            SnacksPickerInput = { fg = colors.text, bg = colors.none },
+            SnacksPickerInputBorder = { fg = colors.blue, bg = colors.none },
+            SnacksPickerInputTitle = { fg = colors.blue, bg = colors.none, bold = true },
+            SnacksPickerPreview = { fg = colors.text, bg = colors.none },
+            SnacksPickerPreviewBorder = { fg = colors.surface1, bg = colors.none },
+            SnacksPickerPreviewTitle = { fg = colors.lavender, bg = colors.none, bold = true },
+            SnacksPickerCursorLine = { bg = colors.surface0, bold = true },
+            SnacksPickerSelected = { fg = colors.flamingo, bg = colors.surface0, bold = true },
+
+            -- Explorer specific highlights
             SnacksExplorerNormal = { fg = colors.text, bg = colors.none },
             SnacksExplorerBorder = { fg = colors.surface1, bg = colors.none },
             SnacksExplorerTitle = { fg = colors.lavender, bg = colors.none, bold = true },
@@ -88,15 +109,13 @@ return {
             SnacksTransparentNormal = { fg = colors.text, bg = colors.none },
             SnacksTransparentBorder = { fg = colors.surface1, bg = colors.none },
             SnacksTransparentTitle = { fg = colors.lavender, bg = colors.none, bold = true },
-
-            -- Popup utilities remain readable cards above the transparent canvas.
-            SnacksSolidNormal = { fg = colors.text, bg = colors.mantle },
-            SnacksSolidBorder = { fg = colors.surface2, bg = colors.mantle },
-            SnacksSolidTitle = { fg = colors.lavender, bg = colors.mantle, bold = true },
-            SnacksInputNormal = { fg = colors.text, bg = colors.mantle },
-            SnacksInputBorder = { fg = colors.blue, bg = colors.mantle },
-            SnacksInputTitle = { fg = colors.blue, bg = colors.mantle, bold = true },
-            SnacksNotifierHistory = { fg = colors.text, bg = colors.mantle },
+            SnacksSolidNormal = { fg = colors.text, bg = colors.none },
+            SnacksSolidBorder = { fg = colors.surface1, bg = colors.none },
+            SnacksSolidTitle = { fg = colors.lavender, bg = colors.none, bold = true },
+            SnacksInputNormal = { fg = colors.text, bg = colors.none },
+            SnacksInputBorder = { fg = colors.blue, bg = colors.none },
+            SnacksInputTitle = { fg = colors.blue, bg = colors.none, bold = true },
+            SnacksNotifierHistory = { fg = colors.text, bg = colors.none },
             SnacksPickerBufPin = { fg = colors.peach, bold = true },
 
             -- Quiet chrome keeps attention on code, with lavender as the accent.

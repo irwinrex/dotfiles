@@ -16,14 +16,20 @@ font-thicken = false
 theme = "Catppuccin Mocha"
 
 # --- Window ---
-window-decoration = true
+macos-titlebar-style = transparent
+macos-window-buttons = visible
 window-padding-x = 12
 window-padding-y = 12
 background-opacity = 0.8
 background-blur-radius = 20
+
+# --- Custom Shader ---
+custom-shader = ~/.config/ghostty/shaders/starry-sky.glsl
+custom-shader-animation = true
 window-colorspace = display-p3
 resize-overlay = never
 confirm-close-surface = false
+window-save-state = never
 
 # --- Cursor ---
 cursor-style = block

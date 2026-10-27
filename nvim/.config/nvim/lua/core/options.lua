@@ -7,6 +7,7 @@ vim.opt.backspace = { "indent", "eol", "start" }
 vim.opt.clipboard = "unnamedplus"
 vim.opt.mouse = "a"
 vim.opt.undofile = true
+vim.opt.swapfile = false
 
 vim.opt.ignorecase = true
 vim.opt.smartcase = true

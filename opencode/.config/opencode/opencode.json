@@ -1,23 +1,16 @@
 {
   "$schema": "https://opencode.ai/config.json",
   "share": "disabled",
-  "autoupdate": "notify",
   "compaction": {
     "auto": true,
-    "preserve_recent_tokens": 6000,
-    "reserved": 12000
+    "keep": {
+      "tokens": 6000
+    },
+    "buffer": 12000
   },
   "tool_output": {
     "max_lines": 800,
     "max_bytes": 20000
-  },
-  "attachment": {
-    "image": {
-      "auto_resize": true,
-      "max_width": 1600,
-      "max_height": 1600,
-      "max_base64_bytes": 3000000
-    }
   },
   "watcher": {
     "ignore": [
@@ -61,177 +54,738 @@
   },
   "lsp": {
     "terraform": {
-      "command": ["terraform-ls", "serve"],
-      "extensions": [".tf", ".tfvars"]
+      "command": [
+        "terraform-ls",
+        "serve"
+      ],
+      "extensions": [
+        ".tf",
+        ".tfvars"
+      ]
     }
   },
-  "permission": {
-    "read": {
-      "*": "allow",
-      "*.env": "deny",
-      "*.env.*": "deny",
-      "*.env.example": "allow",
-      "*.tfstate": "deny",
-      "*.tfstate.*": "deny",
-      "*id_rsa*": "deny",
-      "*id_ed25519*": "deny",
-      "*.pem": "deny",
-      "*.key": "deny",
-      "kubeconfig*": "deny"
-    },
-    "bash": {
-      "*": "ask",
-      "pwd": "allow",
-      "ls": "allow",
-      "ls *": "allow",
-      "cat *": "allow",
-      "head *": "allow",
-      "tail *": "allow",
-      "wc *": "allow",
-      "which *": "allow",
-      "command -v *": "allow",
-      "echo *": "allow",
-      "env": "allow",
-      "printenv": "allow",
-      "git status*": "allow",
-      "git diff*": "allow",
-      "git log*": "allow",
-      "git show*": "allow",
-      "git branch*": "allow",
-      "git tag*": "allow",
-      "git remote*": "allow",
-      "git stash list*": "allow",
-      "rg *": "allow",
-      "fd *": "allow",
-      "find *": "allow",
-      "tree *": "allow",
-      "go test*": "allow",
-      "go vet*": "allow",
-      "go list*": "allow",
-      "go doc*": "allow",
-      "go env*": "allow",
-      "pytest*": "allow",
-      "python -m pytest*": "allow",
-      "python3 -m pytest*": "allow",
-      "npm test*": "allow",
-      "pnpm test*": "allow",
-      "yarn test*": "allow",
-      "bun test*": "allow",
-      "cargo check*": "allow",
-      "cargo test*": "allow",
-      "make help*": "allow",
-      "terraform init*": "ask",
-      "terraform fmt*": "ask",
-      "terraform validate*": "ask",
-      "terraform plan*": "allow",
-      "terraform apply*": "allow",
-      "terraform *-destroy*": "deny",
-      "terraform destroy*": "deny",
-      "tofu plan*": "allow",
-      "tofu apply*": "allow",
-      "tofu *-destroy*": "deny",
-      "tofu destroy*": "deny",
-      "terragrunt plan*": "allow",
-      "terragrunt apply*": "allow",
-      "terragrunt *-destroy*": "deny",
-      "terragrunt destroy*": "deny",
-      "kubectl get *": "ask",
-      "kubectl describe *": "ask",
-      "kubectl diff *": "ask",
-      "kubectl apply *": "ask",
-      "kubectl delete *": "deny",
-      "helm diff *": "ask",
-      "helm install *": "ask",
-      "helm upgrade *": "ask",
-      "helm uninstall *": "deny",
-      "aws *": "ask",
-      "gcloud *": "ask",
-      "az *": "ask",
-      "docker ps*": "allow",
-      "docker images*": "allow",
-      "docker build*": "ask",
-      "docker compose up*": "ask",
-      "docker compose down*": "ask",
-      "docker rm *": "deny",
-      "docker rmi *": "deny",
-      "rm *": "deny",
-      "sudo *": "ask",
-      "git push*": "ask",
-      "git reset*": "ask",
-      "git clean*": "deny"
-    },
-    "edit": "ask",
-    "external_directory": "ask",
-    "skill": {
-      "*": "allow"
-    },
-    "webfetch": "ask",
-    "websearch": "ask",
-    "doom_loop": "deny"
+  "update": "notify",
+  "media": {
+    "image": {
+      "auto_resize": true,
+      "max_width": 1600,
+      "max_height": 1600,
+      "max_base64_bytes": 3000000
+    }
   },
-  "agent": {
+  "permissions": [
+    {
+      "action": "read",
+      "resource": "*",
+      "effect": "allow"
+    },
+    {
+      "action": "read",
+      "resource": "*.env",
+      "effect": "deny"
+    },
+    {
+      "action": "read",
+      "resource": "*.env.*",
+      "effect": "deny"
+    },
+    {
+      "action": "read",
+      "resource": "*.env.example",
+      "effect": "allow"
+    },
+    {
+      "action": "read",
+      "resource": "*.tfstate",
+      "effect": "deny"
+    },
+    {
+      "action": "read",
+      "resource": "*.tfstate.*",
+      "effect": "deny"
+    },
+    {
+      "action": "read",
+      "resource": "*id_rsa*",
+      "effect": "deny"
+    },
+    {
+      "action": "read",
+      "resource": "*id_ed25519*",
+      "effect": "deny"
+    },
+    {
+      "action": "read",
+      "resource": "*.pem",
+      "effect": "deny"
+    },
+    {
+      "action": "read",
+      "resource": "*.key",
+      "effect": "deny"
+    },
+    {
+      "action": "read",
+      "resource": "kubeconfig*",
+      "effect": "deny"
+    },
+    {
+      "action": "shell",
+      "resource": "*",
+      "effect": "ask"
+    },
+    {
+      "action": "shell",
+      "resource": "pwd",
+      "effect": "allow"
+    },
+    {
+      "action": "shell",
+      "resource": "ls",
+      "effect": "allow"
+    },
+    {
+      "action": "shell",
+      "resource": "ls *",
+      "effect": "allow"
+    },
+    {
+      "action": "shell",
+      "resource": "cat *",
+      "effect": "allow"
+    },
+    {
+      "action": "shell",
+      "resource": "head *",
+      "effect": "allow"
+    },
+    {
+      "action": "shell",
+      "resource": "tail *",
+      "effect": "allow"
+    },
+    {
+      "action": "shell",
+      "resource": "wc *",
+      "effect": "allow"
+    },
+    {
+      "action": "shell",
+      "resource": "which *",
+      "effect": "allow"
+    },
+    {
+      "action": "shell",
+      "resource": "command -v *",
+      "effect": "allow"
+    },
+    {
+      "action": "shell",
+      "resource": "echo *",
+      "effect": "allow"
+    },
+    {
+      "action": "shell",
+      "resource": "env",
+      "effect": "allow"
+    },
+    {
+      "action": "shell",
+      "resource": "printenv",
+      "effect": "allow"
+    },
+    {
+      "action": "shell",
+      "resource": "git status*",
+      "effect": "allow"
+    },
+    {
+      "action": "shell",
+      "resource": "git diff*",
+      "effect": "allow"
+    },
+    {
+      "action": "shell",
+      "resource": "git log*",
+      "effect": "allow"
+    },
+    {
+      "action": "shell",
+      "resource": "git show*",
+      "effect": "allow"
+    },
+    {
+      "action": "shell",
+      "resource": "git branch*",
+      "effect": "allow"
+    },
+    {
+      "action": "shell",
+      "resource": "git tag*",
+      "effect": "allow"
+    },
+    {
+      "action": "shell",
+      "resource": "git remote*",
+      "effect": "allow"
+    },
+    {
+      "action": "shell",
+      "resource": "git stash list*",
+      "effect": "allow"
+    },
+    {
+      "action": "shell",
+      "resource": "rg *",
+      "effect": "allow"
+    },
+    {
+      "action": "shell",
+      "resource": "fd *",
+      "effect": "allow"
+    },
+    {
+      "action": "shell",
+      "resource": "find *",
+      "effect": "allow"
+    },
+    {
+      "action": "shell",
+      "resource": "tree *",
+      "effect": "allow"
+    },
+    {
+      "action": "shell",
+      "resource": "go test*",
+      "effect": "allow"
+    },
+    {
+      "action": "shell",
+      "resource": "go vet*",
+      "effect": "allow"
+    },
+    {
+      "action": "shell",
+      "resource": "go list*",
+      "effect": "allow"
+    },
+    {
+      "action": "shell",
+      "resource": "go doc*",
+      "effect": "allow"
+    },
+    {
+      "action": "shell",
+      "resource": "go env*",
+      "effect": "allow"
+    },
+    {
+      "action": "shell",
+      "resource": "pytest*",
+      "effect": "allow"
+    },
+    {
+      "action": "shell",
+      "resource": "python -m pytest*",
+      "effect": "allow"
+    },
+    {
+      "action": "shell",
+      "resource": "python3 -m pytest*",
+      "effect": "allow"
+    },
+    {
+      "action": "shell",
+      "resource": "npm test*",
+      "effect": "allow"
+    },
+    {
+      "action": "shell",
+      "resource": "pnpm test*",
+      "effect": "allow"
+    },
+    {
+      "action": "shell",
+      "resource": "yarn test*",
+      "effect": "allow"
+    },
+    {
+      "action": "shell",
+      "resource": "bun test*",
+      "effect": "allow"
+    },
+    {
+      "action": "shell",
+      "resource": "cargo check*",
+      "effect": "allow"
+    },
+    {
+      "action": "shell",
+      "resource": "cargo test*",
+      "effect": "allow"
+    },
+    {
+      "action": "shell",
+      "resource": "make help*",
+      "effect": "allow"
+    },
+    {
+      "action": "shell",
+      "resource": "terraform init*",
+      "effect": "ask"
+    },
+    {
+      "action": "shell",
+      "resource": "terraform fmt*",
+      "effect": "ask"
+    },
+    {
+      "action": "shell",
+      "resource": "terraform validate*",
+      "effect": "ask"
+    },
+    {
+      "action": "shell",
+      "resource": "terraform plan*",
+      "effect": "allow"
+    },
+    {
+      "action": "shell",
+      "resource": "terraform apply*",
+      "effect": "allow"
+    },
+    {
+      "action": "shell",
+      "resource": "terraform *-destroy*",
+      "effect": "deny"
+    },
+    {
+      "action": "shell",
+      "resource": "terraform destroy*",
+      "effect": "deny"
+    },
+    {
+      "action": "shell",
+      "resource": "tofu plan*",
+      "effect": "allow"
+    },
+    {
+      "action": "shell",
+      "resource": "tofu apply*",
+      "effect": "allow"
+    },
+    {
+      "action": "shell",
+      "resource": "tofu *-destroy*",
+      "effect": "deny"
+    },
+    {
+      "action": "shell",
+      "resource": "tofu destroy*",
+      "effect": "deny"
+    },
+    {
+      "action": "shell",
+      "resource": "terragrunt plan*",
+      "effect": "allow"
+    },
+    {
+      "action": "shell",
+      "resource": "terragrunt apply*",
+      "effect": "allow"
+    },
+    {
+      "action": "shell",
+      "resource": "terragrunt *-destroy*",
+      "effect": "deny"
+    },
+    {
+      "action": "shell",
+      "resource": "terragrunt destroy*",
+      "effect": "deny"
+    },
+    {
+      "action": "shell",
+      "resource": "kubectl get *",
+      "effect": "ask"
+    },
+    {
+      "action": "shell",
+      "resource": "kubectl describe *",
+      "effect": "ask"
+    },
+    {
+      "action": "shell",
+      "resource": "kubectl diff *",
+      "effect": "ask"
+    },
+    {
+      "action": "shell",
+      "resource": "kubectl apply *",
+      "effect": "ask"
+    },
+    {
+      "action": "shell",
+      "resource": "kubectl delete *",
+      "effect": "deny"
+    },
+    {
+      "action": "shell",
+      "resource": "helm diff *",
+      "effect": "ask"
+    },
+    {
+      "action": "shell",
+      "resource": "helm install *",
+      "effect": "ask"
+    },
+    {
+      "action": "shell",
+      "resource": "helm upgrade *",
+      "effect": "ask"
+    },
+    {
+      "action": "shell",
+      "resource": "helm uninstall *",
+      "effect": "deny"
+    },
+    {
+      "action": "shell",
+      "resource": "aws *",
+      "effect": "ask"
+    },
+    {
+      "action": "shell",
+      "resource": "gcloud *",
+      "effect": "ask"
+    },
+    {
+      "action": "shell",
+      "resource": "az *",
+      "effect": "ask"
+    },
+    {
+      "action": "shell",
+      "resource": "docker ps*",
+      "effect": "allow"
+    },
+    {
+      "action": "shell",
+      "resource": "docker images*",
+      "effect": "allow"
+    },
+    {
+      "action": "shell",
+      "resource": "docker build*",
+      "effect": "ask"
+    },
+    {
+      "action": "shell",
+      "resource": "docker compose up*",
+      "effect": "ask"
+    },
+    {
+      "action": "shell",
+      "resource": "docker compose down*",
+      "effect": "ask"
+    },
+    {
+      "action": "shell",
+      "resource": "docker rm *",
+      "effect": "deny"
+    },
+    {
+      "action": "shell",
+      "resource": "docker rmi *",
+      "effect": "deny"
+    },
+    {
+      "action": "shell",
+      "resource": "rm *",
+      "effect": "deny"
+    },
+    {
+      "action": "shell",
+      "resource": "sudo *",
+      "effect": "ask"
+    },
+    {
+      "action": "shell",
+      "resource": "git push*",
+      "effect": "ask"
+    },
+    {
+      "action": "shell",
+      "resource": "git reset*",
+      "effect": "ask"
+    },
+    {
+      "action": "shell",
+      "resource": "git clean*",
+      "effect": "deny"
+    },
+    {
+      "action": "edit",
+      "resource": "*",
+      "effect": "ask"
+    },
+    {
+      "action": "external_directory",
+      "resource": "*",
+      "effect": "ask"
+    },
+    {
+      "action": "skill",
+      "resource": "*",
+      "effect": "allow"
+    },
+    {
+      "action": "webfetch",
+      "resource": "*",
+      "effect": "ask"
+    },
+    {
+      "action": "websearch",
+      "resource": "*",
+      "effect": "ask"
+    },
+    {
+      "action": "doom_loop",
+      "resource": "*",
+      "effect": "deny"
+    }
+  ],
+  "agents": {
     "context-scout": {
       "description": "Builds a compact repo map before implementation. Use when context is unclear or the repository is large.",
       "mode": "subagent",
       "temperature": 0.1,
       "prompt": "Map only the files needed for the current task. Prefer rg, fd, git status, and short file slices. Do not read generated, vendored, dependency, cache, state, or lock files unless directly relevant. Return: goal, relevant files, commands discovered, risks, and next action in under 30 lines.",
-      "permission": {
-        "edit": "deny",
-        "bash": {
-          "*": "ask",
-          "pwd": "allow",
-          "ls": "allow",
-          "ls *": "allow",
-          "cat *": "allow",
-          "head *": "allow",
-          "tail *": "allow",
-          "wc *": "allow",
-          "which *": "allow",
-          "git status*": "allow",
-          "git diff*": "allow",
-          "git log*": "allow",
-          "rg *": "allow",
-          "fd *": "allow",
-          "find *": "allow",
-          "tree *": "allow"
+      "permissions": [
+        {
+          "action": "edit",
+          "resource": "*",
+          "effect": "deny"
         },
-        "webfetch": "deny",
-        "websearch": "deny"
-      }
+        {
+          "action": "shell",
+          "resource": "*",
+          "effect": "ask"
+        },
+        {
+          "action": "shell",
+          "resource": "pwd",
+          "effect": "allow"
+        },
+        {
+          "action": "shell",
+          "resource": "ls",
+          "effect": "allow"
+        },
+        {
+          "action": "shell",
+          "resource": "ls *",
+          "effect": "allow"
+        },
+        {
+          "action": "shell",
+          "resource": "cat *",
+          "effect": "allow"
+        },
+        {
+          "action": "shell",
+          "resource": "head *",
+          "effect": "allow"
+        },
+        {
+          "action": "shell",
+          "resource": "tail *",
+          "effect": "allow"
+        },
+        {
+          "action": "shell",
+          "resource": "wc *",
+          "effect": "allow"
+        },
+        {
+          "action": "shell",
+          "resource": "which *",
+          "effect": "allow"
+        },
+        {
+          "action": "shell",
+          "resource": "git status*",
+          "effect": "allow"
+        },
+        {
+          "action": "shell",
+          "resource": "git diff*",
+          "effect": "allow"
+        },
+        {
+          "action": "shell",
+          "resource": "git log*",
+          "effect": "allow"
+        },
+        {
+          "action": "shell",
+          "resource": "rg *",
+          "effect": "allow"
+        },
+        {
+          "action": "shell",
+          "resource": "fd *",
+          "effect": "allow"
+        },
+        {
+          "action": "shell",
+          "resource": "find *",
+          "effect": "allow"
+        },
+        {
+          "action": "shell",
+          "resource": "tree *",
+          "effect": "allow"
+        },
+        {
+          "action": "webfetch",
+          "resource": "*",
+          "effect": "deny"
+        },
+        {
+          "action": "websearch",
+          "resource": "*",
+          "effect": "deny"
+        }
+      ]
     },
     "devops-review": {
       "description": "Reviews infrastructure, deployment, CI/CD, Kubernetes, Terraform, containers, cloud, and operational safety without modifying files.",
       "mode": "subagent",
       "temperature": 0.1,
       "prompt": "Review for DevOps production readiness. Check least privilege, secret handling, rollback paths, idempotency, observability, health checks, resource limits, drift risk, blast radius, and safe deployment order. Do not edit files. Keep findings actionable and rank by severity.",
-      "permission": {
-        "edit": "deny",
-        "bash": {
-          "*": "ask",
-          "pwd": "allow",
-          "ls": "allow",
-          "ls *": "allow",
-          "git status*": "allow",
-          "git diff*": "allow",
-          "git log*": "allow",
-          "rg *": "allow",
-          "fd *": "allow",
-          "find *": "allow",
-          "terraform plan*": "ask",
-          "terraform validate*": "ask",
-          "tofu plan*": "ask",
-          "terragrunt plan*": "ask",
-          "kubectl get *": "ask",
-          "kubectl describe *": "ask",
-          "kubectl diff *": "ask",
-          "helm diff *": "ask",
-          "aws *": "ask",
-          "gcloud *": "ask",
-          "az *": "ask"
+      "permissions": [
+        {
+          "action": "edit",
+          "resource": "*",
+          "effect": "deny"
         },
-        "webfetch": "ask",
-        "websearch": "ask"
-      }
+        {
+          "action": "shell",
+          "resource": "*",
+          "effect": "ask"
+        },
+        {
+          "action": "shell",
+          "resource": "pwd",
+          "effect": "allow"
+        },
+        {
+          "action": "shell",
+          "resource": "ls",
+          "effect": "allow"
+        },
+        {
+          "action": "shell",
+          "resource": "ls *",
+          "effect": "allow"
+        },
+        {
+          "action": "shell",
+          "resource": "git status*",
+          "effect": "allow"
+        },
+        {
+          "action": "shell",
+          "resource": "git diff*",
+          "effect": "allow"
+        },
+        {
+          "action": "shell",
+          "resource": "git log*",
+          "effect": "allow"
+        },
+        {
+          "action": "shell",
+          "resource": "rg *",
+          "effect": "allow"
+        },
+        {
+          "action": "shell",
+          "resource": "fd *",
+          "effect": "allow"
+        },
+        {
+          "action": "shell",
+          "resource": "find *",
+          "effect": "allow"
+        },
+        {
+          "action": "shell",
+          "resource": "terraform plan*",
+          "effect": "ask"
+        },
+        {
+          "action": "shell",
+          "resource": "terraform validate*",
+          "effect": "ask"
+        },
+        {
+          "action": "shell",
+          "resource": "tofu plan*",
+          "effect": "ask"
+        },
+        {
+          "action": "shell",
+          "resource": "terragrunt plan*",
+          "effect": "ask"
+        },
+        {
+          "action": "shell",
+          "resource": "kubectl get *",
+          "effect": "ask"
+        },
+        {
+          "action": "shell",
+          "resource": "kubectl describe *",
+          "effect": "ask"
+        },
+        {
+          "action": "shell",
+          "resource": "kubectl diff *",
+          "effect": "ask"
+        },
+        {
+          "action": "shell",
+          "resource": "helm diff *",
+          "effect": "ask"
+        },
+        {
+          "action": "shell",
+          "resource": "aws *",
+          "effect": "ask"
+        },
+        {
+          "action": "shell",
+          "resource": "gcloud *",
+          "effect": "ask"
+        },
+        {
+          "action": "shell",
+          "resource": "az *",
+          "effect": "ask"
+        },
+        {
+          "action": "webfetch",
+          "resource": "*",
+          "effect": "ask"
+        },
+        {
+          "action": "websearch",
+          "resource": "*",
+          "effect": "ask"
+        }
+      ]
     }
   }
 }

@@ -311,22 +311,24 @@ return {
         },
         explorer = {
           include = { ".gitignore" },
-          on_show = function(picker)
-            local winhighlight = transparent_winhighlight
-              .. ",CursorLine:SnacksExplorerCursorLine"
-
-            local windows = {
-              picker.layout.root.win,
-              picker.input.win.win,
-              picker.list.win.win,
-              picker.preview and picker.preview.win and picker.preview.win.win,
-            }
-            for _, window in ipairs(windows) do
-              if window and vim.api.nvim_win_is_valid(window) then
-                vim.wo[window].winhighlight = winhighlight
-              end
-            end
-          end,
+          win = {
+            input = {
+              wo = {
+                winhighlight = transparent_winhighlight,
+              },
+            },
+            list = {
+              wo = {
+                winhighlight = transparent_winhighlight
+                  .. ",CursorLine:SnacksExplorerCursorLine",
+              },
+            },
+          },
+          layout = {
+            wo = {
+              winhighlight = transparent_winhighlight,
+            },
+          },
         },
       },
       actions = {
@@ -454,11 +456,27 @@ return {
       "<leader>tt",
       function() Snacks.terminal() end,
       desc = "Toggle Terminal",
+      mode = { "n", "t" },
+    },
+    {
+      "<leader>tb",
+      function()
+        vim.cmd.terminal()
+        vim.cmd.startinsert()
+      end,
+      desc = "Open Terminal in Buffer",
     },
     {
       "<c-/>",
       function() Snacks.terminal() end,
       desc = "Toggle Terminal",
+      mode = { "n", "t", "i", "x" },
+    },
+    {
+      "<c-_>",
+      function() Snacks.terminal() end,
+      desc = "which_key_ignore",
+      mode = { "n", "t", "i", "x" },
     },
     {
       "<leader>z",
