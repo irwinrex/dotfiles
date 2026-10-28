@@ -357,12 +357,12 @@
     {
       "action": "shell",
       "resource": "terraform *-destroy*",
-      "effect": "deny"
+      "effect": "ask"
     },
     {
       "action": "shell",
       "resource": "terraform destroy*",
-      "effect": "deny"
+      "effect": "ask"
     },
     {
       "action": "shell",
@@ -502,7 +502,7 @@
     {
       "action": "shell",
       "resource": "rm *",
-      "effect": "deny"
+      "effect": "ask"
     },
     {
       "action": "shell",

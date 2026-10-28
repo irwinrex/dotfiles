@@ -9,7 +9,8 @@ permission:
   bash:
     "*": allow
     "terraform apply*": deny
-    "terraform destroy*": deny
+    "terraform *-destroy*": ask
+    "terraform destroy*": ask
     "tofu apply*": deny
     "tofu destroy*": deny
     "terragrunt apply*": deny
@@ -18,7 +19,7 @@ permission:
     "helm uninstall *": deny
     "docker rm *": deny
     "docker rmi *": deny
-    "rm *": deny
+    "rm *": ask
     "git clean*": deny
 ---
 
@@ -27,5 +28,5 @@ approval. Follow AGENTS.md rules: smallest useful context, narrow diffs, no
 unrelated reformatting, no commits unless explicitly asked.
 
 Still respect safety rules: never touch secrets (.env, keys, tfstate,
-kubeconfig), never run denied commands (rm, terraform apply, kubectl delete,
-git clean, docker rm).
+kubeconfig). Require approval before rm and terraform destroy. Never run
+denied commands (terraform apply, kubectl delete, git clean, docker rm).
