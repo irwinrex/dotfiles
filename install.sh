@@ -147,6 +147,46 @@ install_curl_sh() {
   fi
 }
 
+setup_rust() {
+  # 1. rustup itself (cross-platform: works on all supported OSes, unlike the
+  #    OS-gated brew/pacman/apt functions). NVIM's instantlua init prepends
+  #    ~/.cargo/bin to PATH and expects a rustup-managed rust-analyzer there.
+  if ! command -v rustup >/dev/null 2>&1; then
+    info "Installing rustup (stable toolchain)..."
+    if ! command -v curl >/dev/null 2>&1; then
+      err "curl not found (required to install rustup)"
+      return 1
+    fi
+    # -y: non-interactive (install_curl_sh can't be reused: it pipes to bare
+    # sh with no args, which hangs on rustup's toolchain prompt).
+    curl -sSfL https://sh.rustup.rs | sh -s -- -y --default-toolchain stable >/dev/null 2>&1 || {
+      warn "rustup install script failed"
+      return 0
+    }
+    export PATH="$HOME/.cargo/bin:$PATH"
+  fi
+  if ! command -v rustup >/dev/null 2>&1; then
+    warn "rustup not available after install (log out and back in)"
+    return 0
+  fi
+  ok "rustup is installed"
+
+  # 2. Components. NB: ~/.cargo/bin/rust-analyzer is a rustup shim that exits
+  #    with "Unknown binary" unless the component exists in the active
+  #    toolchain — checking `command -v` is NOT enough, so verify per component.
+  local c
+  for c in rust-analyzer rust-src rustfmt clippy; do
+    if rustup component list --installed 2>/dev/null | grep -q "^${c}-"; then
+      ok "rustup component $c already installed"
+    else
+      info "Adding rustup component $c..."
+      rustup component add "$c" 2>/dev/null \
+        && ok "rustup component $c installed" \
+        || warn "rustup component add $c failed"
+    fi
+  done
+}
+
 ensure_stow() {
   if command -v stow >/dev/null 2>&1; then
     ok "stow is already installed"
@@ -487,6 +527,7 @@ main() {
   esac
 
   echo ""
+  setup_rust
   ensure_stow
   create_dirs
   install_omz
@@ -509,6 +550,7 @@ main() {
   info "Next steps:"
   info "  1. Restart your terminal or run: exec zsh"
   info "  2. Update Oh My Zsh later with: omz update"
+  info "  3. Rust LSP works when opening a .rs file in nvim (rustup-managed rust-analyzer)"
   echo ""
   ok "Happy hacking!"
 }

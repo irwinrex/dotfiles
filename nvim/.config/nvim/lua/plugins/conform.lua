@@ -19,7 +19,7 @@ return {
         return { lsp_format = "prefer", name = "gopls", timeout_ms = 2000 }
       end
       if vim.bo[bufnr].filetype == "rust" then
-        return { lsp_format = "prefer", name = "rust_analyzer", timeout_ms = 2000 }
+        return { lsp_format = "prefer", name = "rust-analyzer", timeout_ms = 2000 }
       end
       return { lsp_format = "fallback", timeout_ms = 2000 }
     end,

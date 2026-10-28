@@ -23,9 +23,11 @@ return {
         "jsonls",
         "lua_ls",
         "ruff",
-        "rust_analyzer",
         "terraformls",
         "yamlls",
+        -- rust_analyzer is intentionally NOT here: mason/bin is first in
+        -- PATH and would shadow the rustup-managed binary. Keep RA version-
+        -- matched to the toolchain via `rustup component add rust-analyzer`.
       },
       -- Servers are configured and enabled explicitly in lua/lsp/lang.
       automatic_enable = false,

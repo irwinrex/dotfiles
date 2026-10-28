@@ -69,7 +69,14 @@ vim.g.rustaceanvim = {
         typing = { autoClosingAngleBrackets = { enable = true } },
         files = {
           excludeDirs = { ".git", "node_modules", "vendor", "target" },
+          -- Server-side file watching: Neovim's client watcher (re)reads on
+          -- FocusGained/BufEnter/CursorHold via checktime; RA watching on the
+          -- server side avoids the client scan and double bookkeeping.
+          watcher = "server",
         },
+        -- JetBrains/RustRover import style: one `use crate::path::Item;` per crate
+        -- instead of separate use statements (cleaner diff for RA codeActions).
+        imports = { granularity = { group = "crate" } },
       },
     },
   },

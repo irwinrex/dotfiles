@@ -19,6 +19,18 @@ local function rust_buffer_keymaps(bufnr)
   vim.keymap.set("n", "<leader>rp", cmd("RustLsp parentModule"), opts("Rust parent module"))
   vim.keymap.set("n", "<leader>rj", cmd("RustLsp joinLines"), opts("Rust join lines"))
   vim.keymap.set("v", "<leader>rj", "<cmd>RustLsp joinLines<CR>", opts("Rust join lines"))
+  -- Reformat selection (JetBrains Ctrl+Alt+Shift+R parity); requires RA's
+  -- textDocument/rangeFormatting. Esc falls back to rustfmt via conform.
+  vim.keymap.set("v", "<leader>rf", function()
+    vim.lsp.buf.format({
+      name = "rust-analyzer",
+      async = true,
+      range = {
+        start = { vim.fn.getpos("'<")[2], vim.fn.getpos("'<")[3] - 1 },
+        ["end"] = { vim.fn.getpos("'>")[2], vim.fn.getpos("'>")[3] },
+      },
+    })
+  end, opts("Rust format selection"))
   vim.keymap.set("n", "<leader>ro", cmd("RustLsp openDocsRs"), opts("Rust open docs.rs"))
   vim.keymap.set("n", "<leader>rx", cmd("RustLsp explainError"), opts("Rust explain error"))
   vim.keymap.set("n", "<leader>rc", cmd("RustLsp openCargo"), opts("Rust open Cargo.toml"))
@@ -43,16 +55,14 @@ return {
       vim.api.nvim_create_autocmd("LspAttach", {
         group = vim.api.nvim_create_augroup("RustDoubleClientGuard", { clear = true }),
         callback = function(args)
-          local clients = vim.lsp.get_clients({ bufnr = args.buf, name = "rust_analyzer" })
+          local clients = vim.lsp.get_clients({ bufnr = args.buf, name = "rust-analyzer" })
           if #clients > 1 then
-            vim.notify("Two rust_analyzer clients attached; disable manual vim.lsp.enable in lsp/lang/rust.lua", vim.log.levels.WARN)
+            vim.notify("Two rust-analyzer clients attached; disable manual vim.lsp.enable in lsp/lang/rust.lua", vim.log.levels.WARN)
           end
         end,
       })
     end,
     config = function()
-      -- Default on for all buffers; per-buffer enables below cover ordering races.
-      pcall(vim.lsp.inlay_hint.enable, true)
       vim.api.nvim_create_autocmd("FileType", {
         pattern = "rust",
         group = vim.api.nvim_create_augroup("RustJetBrainsKeymaps", { clear = true }),
@@ -60,8 +70,10 @@ return {
           rust_buffer_keymaps(args.buf)
           -- Fallback: LspAttach may have fired before this config() ran.
           enable_rust_inlay(args.buf)
-          if vim.lsp.get_clients({ bufnr = args.buf, name = "rust_analyzer" })[1] then
-            pcall(vim.lsp.codelens.refresh, { bufnr = args.buf })
+          if vim.lsp.get_clients({ bufnr = args.buf, name = "rust-analyzer" })[1] then
+            -- 0.12: codelens.refresh() is deprecated; enable() is the
+            -- self-managing API (nvim refreshes codelens automatically).
+            pcall(vim.lsp.codelens.enable, true, { bufnr = args.buf })
           end
         end,
       })
@@ -70,16 +82,17 @@ return {
         group = vim.api.nvim_create_augroup("RustInlayLens", { clear = true }),
         callback = function(args)
           local client = vim.lsp.get_client_by_id(args.data.client_id)
-          if not client or client.name ~= "rust_analyzer" then return end
+          if not client or client.name ~= "rust-analyzer" then return end
           -- Unconditional: provider flag can be nil before workspace init.
           enable_rust_inlay(args.buf)
+          -- JetBrains caret-parity: highlight all usages of the symbol under
+          -- the cursor. document_highlight() manages its own CursorMoved
+          -- autocmd from here on; highlights clear when no RA client exists.
+          pcall(vim.lsp.buf.document_highlight)
           if client.server_capabilities.codeLensProvider then
-            vim.lsp.codelens.refresh({ bufnr = args.buf })
-            vim.api.nvim_create_autocmd({ "BufEnter", "InsertLeave" }, {
-              buffer = args.buf,
-              group = vim.api.nvim_create_augroup("RustCodeLensRefresh" .. args.buf, { clear = true }),
-              callback = function() vim.lsp.codelens.refresh({ bufnr = args.buf }) end,
-            })
+            -- 0.12: enable() is the supported API — nvim owns refreshing
+            -- (runnables stay live with no manual BufEnter/InsertLeave churn).
+            pcall(vim.lsp.codelens.enable, true, { bufnr = args.buf })
           end
         end,
       })
