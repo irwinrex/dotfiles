@@ -1,3 +1,6 @@
+-- Byte-cache Lua modules. Must run before any require().
+vim.loader.enable()
+
 -- Ensure mason-managed LSP, Go, and Rust binaries are in PATH
 local data_path = vim.fn.stdpath("data")
 local go_path = vim.fn.expand("$HOME/go/bin")

@@ -23,7 +23,7 @@ background-blur-radius = 20
 
 # --- Custom Shader ---
 custom-shader = ~/.config/ghostty/shaders/starry-sky.glsl
-custom-shader-animation = true
+custom-shader-animation = always
 window-colorspace = display-p3
 resize-overlay = never
 confirm-close-surface = false
@@ -44,7 +44,7 @@ copy-on-select = clipboard
 # --- Clipboard Security ---
 clipboard-read = allow
 clipboard-write = allow
-clipboard-paste-protection = true
+clipboard-paste-protection = false
 
 # --- Shell Integration (SAFE MODE) ---
 shell-integration = detect

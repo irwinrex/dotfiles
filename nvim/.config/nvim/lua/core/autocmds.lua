@@ -48,7 +48,7 @@ vim.filetype.add({
 
 -- Auto-reload files when modified externally
 augroup("AutoReload", { clear = true })
-autocmd({ "FocusGained", "BufEnter", "CursorHold", "CursorHoldI" }, {
+autocmd({ "FocusGained", "BufEnter" }, {
   group = "AutoReload",
   command = "if mode() != 'c' | checktime | endif",
 })

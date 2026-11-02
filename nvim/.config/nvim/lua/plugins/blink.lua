@@ -34,7 +34,6 @@ return {
       documentation = { auto_show = true, auto_show_delay_ms = 200 },
       menu = {
         draw = {
-          treesitter = { "lsp" },
           columns = { { "kind_icon" }, { "label", "label_description", gap = 1 }, { "kind" } },
         },
       },

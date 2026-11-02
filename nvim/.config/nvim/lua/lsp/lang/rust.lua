@@ -5,19 +5,35 @@ local capabilities = require("blink.cmp").get_lsp_capabilities(vim.lsp.protocol.
 vim.g.rustaceanvim = {
   server = {
     capabilities = capabilities,
+    -- Scratch .rs files are started as rust-analyzer-standalone from
+    -- plugins/rust.lua. This client attaches only to a real project, so an
+    -- existing cargo session cannot swallow a lone main.rs (detachedFiles is
+    -- fixed at process start and is not updated for extra workspace folders).
+    standalone = true,
+    auto_attach = function(bufnr)
+      if vim.bo[bufnr].buftype ~= "" then return false end
+      local path = vim.api.nvim_buf_get_name(bufnr)
+      if path == "" or not vim.startswith(vim.fs.normalize(path), "/") then return false end
+      if not vim.uv.fs_stat(path) or vim.fn.executable("rust-analyzer") ~= 1 then return false end
+      return vim.fs.find({ "Cargo.toml", "rust-project.json" }, {
+        upward = true,
+        path = vim.fs.dirname(path),
+      })[1] ~= nil
+    end,
     default_settings = {
       ["rust-analyzer"] = {
         cargo = {
           allTargets = true,
-          allFeatures = true,
         },
+        -- Clippy on this package only. --no-deps skips dependency linting;
+        -- workspace = false uses -p instead of --workspace.
         check = {
           command = "clippy",
-          allTargets = true,
+          extraArgs = { "--no-deps" },
+          workspace = false,
         },
         diagnostics = {
           enable = true,
-          styleLints = { enable = true },
         },
         completion = {
           autoimport = { enable = true },
@@ -39,11 +55,12 @@ vim.g.rustaceanvim = {
           run = { enable = true },
           debug = { enable = false },
           implementations = { enable = true },
+          -- Reference counts search the whole crate and refresh with CodeLens.
           references = {
-            adt = { enable = true },
-            enumVariant = { enable = true },
-            method = { enable = true },
-            trait = { enable = true },
+            adt = { enable = false },
+            enumVariant = { enable = false },
+            method = { enable = false },
+            trait = { enable = false },
           },
         },
         inlayHints = {
@@ -52,18 +69,12 @@ vim.g.rustaceanvim = {
           chainingHints = { enable = true },
           closingBraceHints = { enable = true, minLines = 10 },
           parameterHints = { enable = true },
-          expressionAdjustmentHints = {
-            enable = "always",
-            mode = "prefix",
-            hideOutsideUnsafe = false,
-          },
           typeHints = {
             enable = true,
             hideClosureInitialization = false,
             hideNamedConstructor = false,
           },
           renderColons = true,
-          maxLength = nil,
         },
         procMacro = { enable = true },
         typing = { autoClosingAngleBrackets = { enable = true } },

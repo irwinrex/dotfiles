@@ -4,7 +4,10 @@ vim.g.maplocalleader = " "
 vim.opt.diffopt = "internal,filler,closeoff,indent-heuristic,algorithm:histogram,linematch:60"
 vim.opt.autoread = true
 vim.opt.backspace = { "indent", "eol", "start" }
-vim.opt.clipboard = "unnamedplus"
+-- Defer so the macOS pasteboard provider does not block the first frame.
+vim.schedule(function()
+  vim.opt.clipboard = "unnamedplus"
+end)
 vim.opt.mouse = "a"
 vim.opt.undofile = true
 vim.opt.swapfile = false

@@ -44,7 +44,10 @@ vim.lsp.config("*", {
       if vim.bo[bufnr].filetype == "go" then
         vim.lsp.buf.format({ bufnr = bufnr, name = "gopls", async = true })
       elseif vim.bo[bufnr].filetype == "rust" then
-        vim.lsp.buf.format({ bufnr = bufnr, name = "rust-analyzer", async = true })
+        local name = vim.lsp.get_clients({ bufnr = bufnr, name = "rust-analyzer" })[1]
+            and "rust-analyzer"
+          or "rust-analyzer-standalone"
+        vim.lsp.buf.format({ bufnr = bufnr, name = name, async = true })
       else
         require("conform").format({ async = true, lsp_format = "fallback" })
       end
