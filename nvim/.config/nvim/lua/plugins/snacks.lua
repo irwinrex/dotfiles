@@ -430,9 +430,25 @@ return {
       desc = "Keymaps",
     },
     {
-      "<leader>sG",
-      function() Snacks.picker.grep({ cwd = true }) end,
-      desc = "Grep (cwd)",
+      "<leader>/",
+      function() Snacks.picker.grep() end,
+      desc = "Grep",
+    },
+    {
+      "<leader>sg",
+      function() Snacks.picker.grep() end,
+      desc = "Grep",
+    },
+    {
+      "<leader>sB",
+      function() Snacks.picker.grep_buffers() end,
+      desc = "Grep Open Buffers",
+    },
+    {
+      "<leader>sw",
+      function() Snacks.picker.grep_word() end,
+      desc = "Visual selection or word",
+      mode = { "n", "x" },
     },
     {
       "<leader>sR",
