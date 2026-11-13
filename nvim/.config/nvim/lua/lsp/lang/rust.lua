@@ -54,7 +54,7 @@ vim.g.rustaceanvim = {
           enable = true,
           run = { enable = true },
           debug = { enable = false },
-          implementations = { enable = true },
+          implementations = { enable = false },
           -- Reference counts search the whole crate and refresh with CodeLens.
           references = {
             adt = { enable = false },
