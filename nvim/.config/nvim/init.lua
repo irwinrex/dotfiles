@@ -32,6 +32,20 @@ require("lazy").setup({
   install = { colorscheme = { "catppuccin-nvim" } },
   rocks = { enabled = false },
   ui = { border = "rounded" },
+  checker = { enabled = false, notify = false },
+  change_detection = { enabled = true, notify = false },
+  performance = {
+    rtp = {
+      disabled_plugins = {
+        "gzip",
+        "netrwPlugin",
+        "tarPlugin",
+        "tohtml",
+        "tutor",
+        "zipPlugin",
+      },
+    },
+  },
 })
 
 -- LSP (needs blink.cmp from plugins — loaded via lazy=false)
