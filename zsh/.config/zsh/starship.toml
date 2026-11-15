@@ -5,10 +5,10 @@
 # =========================
 
 # LEFT prompt (single line)
-format = "$custom$os$username$hostname$directory$git_branch$git_status$status $character"
+format = "$os$username$hostname$directory$git_branch$git_status$status $character"
 
 # RIGHT prompt (context / versions / infra)
-right_format = "$env_var$terraform$docker_context $golang$python$nodejs"
+right_format = "$custom$env_var$terraform$docker_context $golang$python$nodejs"
 
 add_newline = false
 command_timeout = 1000
