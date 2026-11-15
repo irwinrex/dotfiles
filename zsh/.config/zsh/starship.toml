@@ -5,10 +5,10 @@
 # =========================
 
 # LEFT prompt (single line)
-format = "$os$username$hostname$directory$git_branch$git_status$status $character"
+format = "$custom$os$username$hostname$directory$git_branch$git_status$status $character"
 
 # RIGHT prompt (context / versions / infra)
-right_format = "$kubernetes$custom$terraform$docker_context $golang$python$nodejs"
+right_format = "$env_var$terraform$docker_context $golang$python$nodejs"
 
 add_newline = false
 command_timeout = 1000
@@ -112,7 +112,7 @@ format = '([\[$all_status$ahead_behind\]]($style) )'
 # =========================
 
 [kubernetes]
-disabled = false
+disabled = true
 symbol = "☸ "
 style = "bold blue"
 format = '[$symbol$context(\($namespace\))]($style) '
@@ -132,6 +132,7 @@ style = "bold orange"
 format = '[$symbol$profile(\($region\))]($style) '
 
 [custom.aws_profile]
+disabled = true
 description = "Active AWS profile"
 symbol = "󰸏 "
 style = "bold orange"
@@ -192,3 +193,15 @@ disabled = true
 [cmd_duration]
 min_time = 500
 style = "bold yellow"
+
+[custom.devcontainer]
+command = "printf '󰡨'"
+when = 'test -n "$DEVCONTAINER" -o -n "$REMOTE_CONTAINERS" -o -n "$DEVPOD" -o -n "$DEVCONTAINER_LABEL"'
+format = "[$output]($style) "
+style = "bold blue"
+
+[env_var]
+variable = "DEVCONTAINER_LABEL"
+format = "[$env_value]($style) "
+style = "bold blue"
+
