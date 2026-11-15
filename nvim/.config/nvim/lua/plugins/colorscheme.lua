@@ -70,8 +70,8 @@ return {
             CurSearch = { fg = colors.crust, bg = colors.red, bold = true },
 
             -- Transparent floating surfaces to let terminal background and shaders show through.
-            NormalFloat = { fg = colors.text, bg = colors.base },
-            FloatBorder = { fg = colors.surface1, bg = colors.base },
+            NormalFloat = { fg = colors.text, bg = colors.none },
+            FloatBorder = { fg = colors.surface1, bg = colors.none },
             FloatTitle = { fg = colors.lavender, bg = colors.none, bold = true },
             FloatFooter = { fg = colors.subtext0, bg = colors.none },
             Pmenu = { fg = colors.subtext1, bg = colors.none },
