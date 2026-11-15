@@ -8,7 +8,7 @@
 format = "$os$username$hostname$directory$git_branch$git_status$status $character"
 
 # RIGHT prompt (context / versions / infra)
-right_format = "$custom$env_var$terraform$docker_context $golang$python$nodejs"
+right_format = "$custom$terraform$docker_context $golang$python$nodejs"
 
 add_newline = false
 command_timeout = 1000
@@ -195,13 +195,8 @@ min_time = 500
 style = "bold yellow"
 
 [custom.devcontainer]
-command = "printf '󰡨'"
+command = "printf '󰡨 -> %s' \"${DEVCONTAINER_LABEL:-${DEVCONTAINER:-devcontainer}}\""
 when = 'test -n "$DEVCONTAINER" -o -n "$REMOTE_CONTAINERS" -o -n "$DEVPOD" -o -n "$DEVCONTAINER_LABEL"'
 format = "[$output]($style) "
-style = "bold blue"
-
-[env_var]
-variable = "DEVCONTAINER_LABEL"
-format = "[$env_value]($style) "
 style = "bold blue"
 
