@@ -20,6 +20,7 @@ return {
       ensure_installed = {
         "basedpyright",
         "gopls",
+        "helm-ls",
         "jsonls",
         "lua_ls",
         "ruff",
