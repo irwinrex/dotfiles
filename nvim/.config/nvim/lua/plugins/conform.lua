@@ -6,12 +6,15 @@ return {
   opts = {
     formatters_by_ft = {
       lua = { "stylua" },
+      python = { "ruff_format" },
       rust = { "rustfmt" },
       terraform = { "terraform_fmt" },
       javascript = { "prettier" },
       typescript = { "prettier" },
       javascriptreact = { "prettier" },
       typescriptreact = { "prettier" },
+      json = { "prettier" },
+      yaml = { "prettier" },
       ["*"] = { "trim_whitespace" },
     },
     format_on_save = function(bufnr)

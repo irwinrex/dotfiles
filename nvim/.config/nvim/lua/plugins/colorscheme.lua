@@ -1,6 +1,7 @@
 return {
   {
     "catppuccin/nvim",
+    version = "v2.0.0",
     lazy = false,
     name = "catppuccin",
     priority = 1000,
@@ -12,8 +13,8 @@ return {
       },
       transparent_background = true,
       float = {
-        transparent = false,
-        solid = true,
+        transparent = true,
+        solid = false,
       },
       term_colors = true,
       styles = {
@@ -75,9 +76,9 @@ return {
             FloatTitle = { fg = colors.lavender, bg = colors.none, bold = true },
             FloatFooter = { fg = colors.subtext0, bg = colors.none },
             Pmenu = { fg = colors.subtext1, bg = colors.none },
-            PmenuSel = { fg = colors.text, bg = colors.surface1, bold = true },
+            PmenuSel = { fg = colors.text, bg = colors.none, bold = true, underline = true },
             PmenuMatch = { fg = colors.mauve, bold = true },
-            WinSeparator = { fg = colors.surface1 },
+            WinSeparator = { fg = colors.surface1, bg = colors.none },
 
             -- Snacks.nvim core & picker transparency (explorer, files, grep, etc.)
             SnacksNormal = { fg = colors.text, bg = colors.none },
@@ -123,6 +124,12 @@ return {
             Folded = { fg = colors.blue, bg = colors.surface0, italic = true },
             NonText = { fg = colors.surface2 },
             Whitespace = { fg = colors.surface2 },
+            EndOfBuffer = { fg = colors.none },
+            SignColumn = { bg = colors.none },
+            FoldColumn = { bg = colors.none },
+            ColorColumn = { bg = colors.none },
+            WinBar = { fg = colors.subtext0, bg = colors.none },
+            WinBarNC = { fg = colors.overlay0, bg = colors.none },
             Directory = { fg = colors.blue, bold = true },
             Title = { fg = colors.mauve, bold = true },
             QuickFixLine = { bg = colors.surface0, bold = true },

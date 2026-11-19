@@ -42,4 +42,7 @@ vim.opt.synmaxcol = 240
 
 vim.opt.termguicolors = true
 
+-- Hide the end-of-buffer `~` filler.
+vim.opt.fillchars:append({ eob = " " })
+
 vim.opt.winblend = 0

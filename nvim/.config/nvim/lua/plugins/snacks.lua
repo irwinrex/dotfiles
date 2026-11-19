@@ -8,16 +8,6 @@ local transparent_winhighlight = table.concat({
   "WinSeparator:SnacksTransparentBorder",
 }, ",")
 
-local solid_winhighlight = table.concat({
-  "Normal:SnacksSolidNormal",
-  "NormalNC:SnacksSolidNormal",
-  "NormalFloat:SnacksSolidNormal",
-  "FloatBorder:SnacksSolidBorder",
-  "FloatTitle:SnacksSolidTitle",
-  "FloatFooter:SnacksSolidTitle",
-  "WinSeparator:SnacksSolidBorder",
-}, ",")
-
 local function buffer_is_pinned(buf)
   return vim.api.nvim_buf_is_valid(buf) and vim.b[buf].snacks_pinned == true
 end
@@ -263,7 +253,7 @@ return {
     toggle = {},
     styles = {
       dashboard = { wo = { winhighlight = transparent_winhighlight } },
-      help = { wo = { winhighlight = solid_winhighlight } },
+      help = { wo = { winhighlight = transparent_winhighlight } },
       lazygit = { wo = { winhighlight = transparent_winhighlight } },
       scratch = { wo = { winhighlight = transparent_winhighlight } },
       terminal = { wo = { winhighlight = transparent_winhighlight } },
