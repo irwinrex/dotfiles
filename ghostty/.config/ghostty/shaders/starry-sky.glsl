@@ -5,7 +5,7 @@
 // --- Configuration ---
 const vec3 spaceBaseColor        = vec3(0.018, 0.020, 0.032); // Deep obsidian void
 const float starThreshold        = 0.84;                       // 16% of cells get a star (higher = fewer)
-const float driftSpeed           = 0.0040;                     // Gentle celestial drift (~4 px/s at 1000px)
+const float driftSpeed           = 0.0080;                     // Celestial drift (~8 px/s at 1000px)
 const float twinkleSpeed         = 0.8;                        // Slow shimmer base rate
 const float twinkleVariation     = 1.2;                        // Per-star shimmer variation
 const float spikeThreshold       = 0.97;                       // Very few stars get cross flares
@@ -39,11 +39,11 @@ vec3 renderStarLayer(vec2 uv, float seed, float scale, bool allowSpikes) {
         if (distSq < 0.16) {
             float tw = sin(iTime * (twinkleSpeed + kind * twinkleVariation) + kind * 6.2831) * 0.5 + 0.5;
             tw *= tw;
-            float pulse = mix(0.55, 1.05, tw);
+            float pulse = mix(0.65, 1.25, tw);
 
             // Inverse-square core (no sqrt) plus a short gaussian halo.
-            float core = 0.00020 / (distSq + 0.00008) * pulse;
-            float halo = exp(-distSq * 700.0) * (0.32 * pulse);
+            float core = 0.00026 / (distSq + 0.00008) * pulse;
+            float halo = exp(-distSq * 700.0) * (0.42 * pulse);
             float brightness = core + halo;
 
             // Thin cross flare on a few of the brightest foreground stars.
@@ -58,7 +58,7 @@ vec3 renderStarLayer(vec2 uv, float seed, float scale, bool allowSpikes) {
 
             // Icy blue through warm gold.
             vec3 starColor = mix(vec3(0.75, 0.88, 1.0), vec3(1.0, 0.94, 0.80), kind);
-            col = starColor * brightness * (0.9 + kind * 0.6);
+            col = starColor * brightness * (1.0 + kind * 0.7);
         }
     }
 
@@ -75,9 +75,9 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord) {
     float band = uv.y + 0.12;
     space += vec3(0.015, 0.020, 0.045) * exp(-band * band * 4.0);
 
-    space += renderStarLayer(uv + drift * 0.3, 11.23, 45.0, false) * 0.70;
-    space += renderStarLayer(uv + drift * 0.6, 27.81, 28.0, false) * 1.05;
-    space += renderStarLayer(uv + drift * 1.0, 44.59, 14.0, true)  * 1.50;
+    space += renderStarLayer(uv + drift * 0.3, 11.23, 45.0, false) * 0.90;
+    space += renderStarLayer(uv + drift * 0.6, 27.81, 28.0, false) * 1.30;
+    space += renderStarLayer(uv + drift * 1.0, 44.59, 14.0, true)  * 1.85;
 
     vec2 textUv = fragCoord.xy / iResolution.xy;
     vec4 terminal = texture(iChannel0, textUv);
