@@ -2,13 +2,14 @@
 # fzf
 # =========================================================
 
-export FZF_DEFAULT_COMMAND='fd --type f --hidden --strip-cwd-prefix'
+export FZF_DEFAULT_COMMAND='fd --type f --hidden --case-sensitive --strip-cwd-prefix'
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 
 export FZF_DEFAULT_OPTS='
   --height=60%
   --layout=reverse
   --border=rounded
+  +i
   --prompt="  "
   --pointer="  "
   --preview-window=right:65%:wrap:border-left

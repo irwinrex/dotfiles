@@ -29,6 +29,8 @@ setopt GLOBDOTS
 setopt INTERACTIVE_COMMENTS
 setopt NUMERIC_GLOB_SORT
 
+export HISTORY_SUBSTRING_SEARCH_CASE_SENSITIVE=true
+
 # =========================================================
 # Oh My Zsh
 # =========================================================
@@ -90,7 +92,7 @@ source "$ZSH/oh-my-zsh.sh"
 
 zmodload -i zsh/complist
 zstyle ':completion:*' menu select
-zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
+zstyle ':completion:*' matcher-list ''
 zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
 
 # =========================================================

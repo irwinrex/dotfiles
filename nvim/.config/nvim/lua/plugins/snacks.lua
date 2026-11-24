@@ -233,7 +233,11 @@ return {
         { section = "startup" },
       },
     },
-    bigfile = {},
+    bigfile = {
+      notify = true,
+      size = 50 * 1024 * 1024, -- 50 MB
+      line_length = 10000,      -- average line length
+    },
     indent = {},
     input = {},
     notifier = { timeout = 3000 },
@@ -271,8 +275,12 @@ return {
     picker = {
       hidden = true,
       ignored = true,
+      matcher = { fuzzy = true, smartcase = false, ignorecase = false },
       sources = {
-        files = { hidden = true, ignored = true },
+        files = { hidden = true, ignored = true, args = { "--case-sensitive" } },
+        grep = { args = { "--case-sensitive" } },
+        grep_buffers = { args = { "--case-sensitive" } },
+        grep_word = { args = { "--word-regexp", "--case-sensitive" } },
         buffers = {
           current = true,
           unloaded = true,

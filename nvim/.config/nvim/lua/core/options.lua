@@ -14,6 +14,8 @@ vim.opt.swapfile = false
 
 vim.opt.ignorecase = false
 vim.opt.smartcase = false
+vim.opt.wildignorecase = false
+vim.opt.fileignorecase = false
 vim.opt.hlsearch = true
 vim.opt.incsearch = true
 
