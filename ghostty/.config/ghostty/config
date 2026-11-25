@@ -21,7 +21,6 @@ window-padding-x = 12
 window-padding-y = 12
 window-padding-balance = true
 background-opacity = 0.8
-background-blur = 20
 
 # --- Custom Shader ---
 custom-shader = ~/.config/ghostty/shaders/starry-sky.glsl
